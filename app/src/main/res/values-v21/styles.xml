@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Bottom Sheets that float over the soft keyboard-->
+    <style name="AppTheme.FloatingBottomSheetStyle" parent="AppTheme.BaseBottomSheetDialogStyle">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

@@ -1,0 +1,39 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!--In case we have a bottom sheet later where the bottom sheet should not float over
+        the keyboard, remove this from the base theme-->
+        <item name="bottomSheetDialogTheme">@style/AppTheme.FloatingBottomSheetStyle</item>
+    </style>
+
+    <style name="AppTheme.BaseBottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <!--Copying this from the app theme as `Theme.MaterialComponents.Light.BottomSheetDialog`
+        was overriding the default colours-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <!--Bottom Sheets that float over the soft keyboard-->
+    <style name="AppTheme.FloatingBottomSheetStyle" parent="AppTheme.BaseBottomSheetDialogStyle">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="AppTheme.TitleCard" parent="CardView.Light">
+        <item name="cardBackgroundColor">@color/colorAccent</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+    <style name="AppTheme.TitleCardTextAppearance">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:alpha">.95</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

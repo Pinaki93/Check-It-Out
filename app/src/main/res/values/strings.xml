@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TodoApp</string>
+    <string name="msg_add_new_item">Add New Item</string>
+    <string name="hint_item_name">Item Name</string>
+    <string name="button_lbl_loading">Saving…</string>
+    <string name="button_lbl_save">Save</string>
+    <string name="lbl_all_items">All Items</string>
+    <string name="lbl_last_modified">Last Modified on %1$s</string>
+    <string name="lbl_item_completed_date">Completed on %1$s</string>
+    <string name="lbl_items_to_do">Items To Do</string>
+    <string name="lbl_completed_items">Completed Items</string>
+    <string name="msg_error_occurred">An error occurred. Please try again</string>
+</resources>
