@@ -30,6 +30,10 @@ class TodoViewModel(
     val deleteTodoResult: LiveData<Event<Result<TodoItem>>>
         get() = _deleteTodoResult
 
+    private var _moveTodoResult: MutableLiveData<Event<Result<TodoItem>>> = MutableLiveData()
+    val moveTodoResult: LiveData<Event<Result<TodoItem>>>
+        get() = _moveTodoResult
+
 
     fun loadTodos() {
 
@@ -48,7 +52,7 @@ class TodoViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
                 _addTodoResult.postValue(Event(Result.Error(e)))
-            }finally {
+            } finally {
                 loadTodos()
             }
         }
@@ -77,6 +81,21 @@ class TodoViewModel(
                 _deleteTodoResult.postValue(Event(Result.Success(item)))
             } catch (e: Exception) {
                 _deleteTodoResult.postValue(Event(Result.Error(e)))
+            } finally {
+                loadTodos()
+            }
+        }
+    }
+
+    fun moveItem(start: Int, end: Int, todoItem: TodoItem) {
+        launchInIOScope {
+            _moveTodoResult.postValue(Event(Result.Loading))
+            try {
+                repository.moveItem(todoItem, end, start)
+                _moveTodoResult.postValue(Event(Result.Success()))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _moveTodoResult.postValue(Event(Result.Error(e)))
             } finally {
                 loadTodos()
             }

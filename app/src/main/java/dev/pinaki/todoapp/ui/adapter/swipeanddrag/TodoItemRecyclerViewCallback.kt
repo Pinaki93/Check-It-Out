@@ -1,4 +1,4 @@
-package dev.pinaki.todoapp.ui.swipe
+package dev.pinaki.todoapp.ui.adapter.swipeanddrag
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,18 +8,19 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import dev.pinaki.todoapp.ui.adapter.TodoItemAdapter
 
-class LeftRightFullSwipeCallback(
+class TodoItemRecyclerViewCallback(
     context: Context,
-    private val listener: OnSwipeCallback?,
+    private val listener: OnItemInteractionListener?,
     private val recyclerView: RecyclerView,
     @DrawableRes rightIcon: Int,
     @ColorInt rightBgColor: Int,
     @DrawableRes leftIcon: Int,
     @ColorInt leftBgColor: Int
 ) : ItemTouchHelper.SimpleCallback(
-    0/*Signifies that we don't need to allow any dragging*/,
-    ItemTouchHelper.LEFT/* or ItemTouchHelper.RIGHT*/ /*Currently only supporting left swipe for delete*/
+    ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+    ItemTouchHelper.LEFT
 ) {
     private val rightIcon = ContextCompat.getDrawable(context, rightIcon)!!
     private val rightBackground = ColorDrawable(rightBgColor)
@@ -32,7 +33,38 @@ class LeftRightFullSwipeCallback(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        return false
+        listener?.onMove(recyclerView, viewHolder.adapterPosition, target.adapterPosition)
+        return true
+    }
+
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
+        return makeMovementFlags(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT
+        )
+    }
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        viewHolder?.let {
+            if (viewHolder is TodoItemAdapter.TodoItemViewHolder) {
+                viewHolder.highlightItem(true)
+            }
+
+            listener?.onItemSelected(recyclerView, viewHolder.adapterPosition)
+        }
+
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        if (viewHolder is TodoItemAdapter.TodoItemViewHolder) {
+            viewHolder.highlightItem(false)
+        }
+
+        listener?.onItemReleased(recyclerView, viewHolder.adapterPosition)
+
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

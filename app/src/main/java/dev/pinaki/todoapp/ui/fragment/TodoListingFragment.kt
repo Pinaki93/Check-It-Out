@@ -18,8 +18,8 @@ import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.TodoListingBinding
 import dev.pinaki.todoapp.ds.Result
 import dev.pinaki.todoapp.ui.adapter.TodoItemAdapter
-import dev.pinaki.todoapp.ui.swipe.LeftRightFullSwipeCallback
-import dev.pinaki.todoapp.ui.swipe.OnSwipeCallback
+import dev.pinaki.todoapp.ui.adapter.swipeanddrag.TodoItemRecyclerViewCallback
+import dev.pinaki.todoapp.ui.adapter.swipeanddrag.OnItemInteractionListener
 import dev.pinaki.todoapp.util.getDoneItems
 import dev.pinaki.todoapp.util.getTodoItems
 import dev.pinaki.todoapp.util.toast
@@ -27,7 +27,7 @@ import dev.pinaki.todoapp.viewmodel.TodoViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TodoListingFragment : Fragment(), OnSwipeCallback {
+class TodoListingFragment : Fragment(), OnItemInteractionListener {
 
     private lateinit var todoViewModel: TodoViewModel
 
@@ -35,6 +35,8 @@ class TodoListingFragment : Fragment(), OnSwipeCallback {
     private lateinit var completedItemsAdapter: TodoItemAdapter
 
     private lateinit var todoListingBinding: TodoListingBinding
+
+    private var startDragPosition: Int = 0
 
     private val onListItemClickListener: (TodoItem) -> Unit = {
         it.done = !it.done
@@ -118,8 +120,8 @@ class TodoListingFragment : Fragment(), OnSwipeCallback {
         todoListingBinding.rvCompletedItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        todoListingBinding.rvTodoItems.isNestedScrollingEnabled = false
-        todoListingBinding.rvCompletedItems.isNestedScrollingEnabled = false
+        todoListingBinding.rvTodoItems.isNestedScrollingEnabled = true
+        todoListingBinding.rvCompletedItems.isNestedScrollingEnabled = true
 
         todoItemsAdapter = TodoItemAdapter(
             application = activity!!.application,
@@ -137,7 +139,7 @@ class TodoListingFragment : Fragment(), OnSwipeCallback {
         completedItemsAdapter.onItemClick = onListItemClickListener
 
         val todoItemTouchHelper = ItemTouchHelper(
-            LeftRightFullSwipeCallback(
+            TodoItemRecyclerViewCallback(
                 activity!!, this,
                 todoListingBinding.rvTodoItems,
                 R.drawable.ic_delete_white_24dp,
@@ -148,7 +150,7 @@ class TodoListingFragment : Fragment(), OnSwipeCallback {
         )
 
         val completedItemTouchHelper = ItemTouchHelper(
-            LeftRightFullSwipeCallback(
+            TodoItemRecyclerViewCallback(
                 activity!!, this,
                 todoListingBinding.rvCompletedItems,
                 R.drawable.ic_delete_white_24dp,
@@ -182,10 +184,40 @@ class TodoListingFragment : Fragment(), OnSwipeCallback {
         } else {
             //TODO: Log it
         }
-
     }
 
     override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
         TODO("Not implemented right swipe yet")
+    }
+
+    override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {
+        when (recyclerView) {
+            todoListingBinding.rvTodoItems -> {
+                todoItemsAdapter.moveItem(initialPosition, finalPosition)
+            }
+
+            todoListingBinding.rvCompletedItems -> {
+                completedItemsAdapter.moveItem(initialPosition, finalPosition)
+            }
+        }
+    }
+
+    override fun onItemSelected(recyclerView: RecyclerView, position: Int) {
+        startDragPosition = position
+    }
+
+    override fun onItemReleased(recyclerView: RecyclerView, position: Int) {
+        if (position == -1 || startDragPosition == position) {
+            return
+        }
+
+        val todoItem =
+            if (recyclerView == todoListingBinding.rvTodoItems)
+                todoItemsAdapter.getItemAtPosition(position)
+            else {
+                completedItemsAdapter.getItemAtPosition(position)
+            }
+
+        todoViewModel.moveItem(startDragPosition, position, todoItem)
     }
 }

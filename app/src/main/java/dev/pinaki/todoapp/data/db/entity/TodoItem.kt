@@ -24,7 +24,10 @@ data class TodoItem(
     var dateModified: Date = Date(),
 
     @ColumnInfo(name = "date_competed")
-    var dateCompeted: Date? = null
+    var dateCompeted: Date? = null,
+
+    @ColumnInfo(name = "item_order")
+    var itemOrder: Double = 0.0
 ) : ComparableItem<TodoItem> {
     override fun isItemSame(other: TodoItem) = this.id == other.id
 
