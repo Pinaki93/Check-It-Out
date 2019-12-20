@@ -58,7 +58,7 @@ class TodoItemAdapter(
                 }
 
                 if (payload.containsKey(DIFF_UTIL_ARG_DATE_MODIFIED)) {
-                    holder.setDateModified(Date(payload.getLong(DIFF_UTIL_ARG_DATE_COMPLETED)))
+                    holder.setDateModified(Date(payload.getLong(DIFF_UTIL_ARG_DATE_MODIFIED)))
                 }
             }
         } else {
