@@ -36,7 +36,6 @@ class TodoViewModel(
 
 
     fun loadTodos() {
-
         launchInIOScope {
             _todos.postValue(repository.getAll())
         }
@@ -91,7 +90,7 @@ class TodoViewModel(
         launchInIOScope {
             _moveTodoResult.postValue(Event(Result.Loading))
             try {
-                repository.moveItem(todoItem, end, start)
+                repository.moveItem(todoItem, start, end)
                 _moveTodoResult.postValue(Event(Result.Success()))
             } catch (e: Exception) {
                 e.printStackTrace()

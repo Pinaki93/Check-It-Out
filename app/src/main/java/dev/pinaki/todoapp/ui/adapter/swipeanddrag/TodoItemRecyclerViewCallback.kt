@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import dev.pinaki.todoapp.ui.adapter.TodoItemAdapter
+import dev.pinaki.todoapp.ui.adapter.TodoListingAdapter
 
 class TodoItemRecyclerViewCallback(
     context: Context,
@@ -34,18 +35,22 @@ class TodoItemRecyclerViewCallback(
         target: RecyclerView.ViewHolder
     ): Boolean {
         listener?.onMove(recyclerView, viewHolder.adapterPosition, target.adapterPosition)
+
         return true
     }
 
     override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
-        return makeMovementFlags(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            ItemTouchHelper.LEFT
-        )
-    }
+        recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
+    ) =
+        if (viewHolder is TodoListingAdapter.ContentViewHolder)
+            makeMovementFlags(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                0
+            )
+        else {
+            makeMovementFlags(0, 0)
+        }
+
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         viewHolder?.let {
@@ -55,7 +60,6 @@ class TodoItemRecyclerViewCallback(
 
             listener?.onItemSelected(recyclerView, viewHolder.adapterPosition)
         }
-
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
@@ -64,7 +68,6 @@ class TodoItemRecyclerViewCallback(
         }
 
         listener?.onItemReleased(recyclerView, viewHolder.adapterPosition)
-
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -97,19 +100,19 @@ class TodoItemRecyclerViewCallback(
             itemView.top + (itemView.height - rightIcon.intrinsicHeight) / 2
         val iconBottom = iconTop + rightIcon.intrinsicHeight
 
+        super.onChildDraw(
+            c,
+            recyclerView,
+            viewHolder,
+            dX,
+            dY,
+            actionState,
+            isCurrentlyActive
+        )
+
         when {
             dX > 0 -> {
                 // right swipe
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-
                 val iconLeft = itemView.left + iconMargin
                 val iconRight = itemView.left + iconMargin + rightIcon.intrinsicWidth
                 leftIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
@@ -120,15 +123,6 @@ class TodoItemRecyclerViewCallback(
 
             dX < 0 -> {
                 // left swipe
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
                 val iconLeft = itemView.right - iconMargin - rightIcon.intrinsicWidth
                 val iconRight = itemView.right - iconMargin
                 rightIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
@@ -143,15 +137,6 @@ class TodoItemRecyclerViewCallback(
             }
 
             else -> {
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
                 rightBackground.setBounds(0, 0, 0, 0)
                 leftBackground.setBounds(0, 0, 0, 0)
 
@@ -159,6 +144,5 @@ class TodoItemRecyclerViewCallback(
                 leftBackground.draw(c)
             }
         }
-
     }
 }

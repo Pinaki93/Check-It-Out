@@ -17,11 +17,14 @@ import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.TodoListingBinding
 import dev.pinaki.todoapp.ds.Result
-import dev.pinaki.todoapp.ui.adapter.TodoItemAdapter
-import dev.pinaki.todoapp.ui.adapter.swipeanddrag.TodoItemRecyclerViewCallback
+import dev.pinaki.todoapp.ui.adapter.ContentItem
+import dev.pinaki.todoapp.ui.adapter.TodoListingAdapter
+import dev.pinaki.todoapp.ui.adapter.TodoViewItem
 import dev.pinaki.todoapp.ui.adapter.swipeanddrag.OnItemInteractionListener
-import dev.pinaki.todoapp.util.getDoneItems
-import dev.pinaki.todoapp.util.getTodoItems
+import dev.pinaki.todoapp.ui.adapter.swipeanddrag.TodoItemRecyclerViewCallback
+import dev.pinaki.todoapp.util.getDataPositions
+import dev.pinaki.todoapp.util.getViewItems
+import dev.pinaki.todoapp.util.isSectionChanged
 import dev.pinaki.todoapp.util.toast
 import dev.pinaki.todoapp.viewmodel.TodoViewModel
 import java.util.*
@@ -31,12 +34,12 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
 
     private lateinit var todoViewModel: TodoViewModel
 
-    private lateinit var todoItemsAdapter: TodoItemAdapter
-    private lateinit var completedItemsAdapter: TodoItemAdapter
-
     private lateinit var todoListingBinding: TodoListingBinding
+    private lateinit var adapter: TodoListingAdapter
 
     private var startDragPosition: Int = 0
+
+    private var initialListState: MutableList<TodoViewItem> = ArrayList()
 
     private val onListItemClickListener: (TodoItem) -> Unit = {
         it.done = !it.done
@@ -49,6 +52,10 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
         }
 
         todoViewModel.saveTodoItem(it)
+    }
+
+    private val onListItemDeleteClickListener: (TodoItem) -> Unit = {
+        todoViewModel.deleteItem(it)
     }
 
     override fun onCreateView(
@@ -75,8 +82,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
         todoViewModel.loadTodos()
 
         todoViewModel.todos.observe(this, Observer {
-            todoItemsAdapter.updateItems(getTodoItems(it))
-            completedItemsAdapter.updateItems(getDoneItems(it))
+            adapter.items = getViewItems(context!!, it)
         })
 
         todoViewModel.saveTodoResult.observe(this, Observer {
@@ -108,40 +114,27 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
 
     private fun showUndoDeleteSnackbar(data: TodoItem) {
         Snackbar
-            .make(todoListingBinding.root, "Item Deleted", Snackbar.LENGTH_LONG)
+            .make(todoListingBinding.root, "Item Deleted", Snackbar.LENGTH_INDEFINITE)
             .setAction("Undo") {
                 todoViewModel.addTodo(data)
             }.show()
     }
 
     private fun setUpRecyclerView() {
-        todoListingBinding.rvTodoItems.layoutManager =
+        adapter = TodoListingAdapter(activity?.application!!)
+        todoListingBinding.rvItems.adapter = adapter
+        todoListingBinding.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        todoListingBinding.rvCompletedItems.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        todoListingBinding.rvTodoItems.isNestedScrollingEnabled = true
-        todoListingBinding.rvCompletedItems.isNestedScrollingEnabled = true
+        todoListingBinding.rvItems.isNestedScrollingEnabled = false
 
-        todoItemsAdapter = TodoItemAdapter(
-            application = activity!!.application,
-            items = ArrayList()
-        )
-        completedItemsAdapter = TodoItemAdapter(
-            application = activity!!.application,
-            items = ArrayList()
-        )
+        adapter.onItemClick = onListItemClickListener
+        adapter.onItemDelete = onListItemDeleteClickListener
 
-        todoListingBinding.rvTodoItems.adapter = todoItemsAdapter
-        todoListingBinding.rvCompletedItems.adapter = completedItemsAdapter
-
-        todoItemsAdapter.onItemClick = onListItemClickListener
-        completedItemsAdapter.onItemClick = onListItemClickListener
-
-        val todoItemTouchHelper = ItemTouchHelper(
+        val itemTouchHelper = ItemTouchHelper(
             TodoItemRecyclerViewCallback(
                 activity!!, this,
-                todoListingBinding.rvTodoItems,
+                todoListingBinding.rvItems,
                 R.drawable.ic_delete_white_24dp,
                 ContextCompat.getColor(activity!!, R.color.deleteColor),
                 R.drawable.ic_mode_edit_white_24dp,
@@ -149,41 +142,11 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
             )
         )
 
-        val completedItemTouchHelper = ItemTouchHelper(
-            TodoItemRecyclerViewCallback(
-                activity!!, this,
-                todoListingBinding.rvCompletedItems,
-                R.drawable.ic_delete_white_24dp,
-                ContextCompat.getColor(activity!!, R.color.deleteColor),
-                R.drawable.ic_mode_edit_white_24dp,
-                ContextCompat.getColor(activity!!, R.color.favColor)
-            )
-        )
-
-        todoItemTouchHelper.attachToRecyclerView(todoListingBinding.rvTodoItems)
-        completedItemTouchHelper.attachToRecyclerView(todoListingBinding.rvCompletedItems)
+        itemTouchHelper.attachToRecyclerView(todoListingBinding.rvItems)
     }
 
     override fun onSwipeLeft(recyclerView: RecyclerView, position: Int) {
-        val itemSwiped: TodoItem? = when (recyclerView) {
-            todoListingBinding.rvTodoItems -> {
-                todoItemsAdapter.getItemAtPosition(position)
-            }
-
-            todoListingBinding.rvCompletedItems -> {
-                completedItemsAdapter.getItemAtPosition(position)
-            }
-
-            else -> {
-                null
-            }
-        }
-
-        if (itemSwiped != null) {
-            todoViewModel.deleteItem(itemSwiped)
-        } else {
-            //TODO: Log it
-        }
+        todoViewModel.deleteItem((adapter.items[position] as ContentItem).data)
     }
 
     override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
@@ -191,33 +154,36 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
     }
 
     override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {
-        when (recyclerView) {
-            todoListingBinding.rvTodoItems -> {
-                todoItemsAdapter.moveItem(initialPosition, finalPosition)
-            }
-
-            todoListingBinding.rvCompletedItems -> {
-                completedItemsAdapter.moveItem(initialPosition, finalPosition)
-            }
-        }
+        adapter.moveItem(initialPosition, finalPosition)
     }
 
     override fun onItemSelected(recyclerView: RecyclerView, position: Int) {
         startDragPosition = position
+
+        initialListState.clear()
+        initialListState.addAll(adapter.items)
     }
 
     override fun onItemReleased(recyclerView: RecyclerView, position: Int) {
-        if (position == -1 || startDragPosition == position) {
+        if (startDragPosition == -1) {
+            //TODO: Log it - inconsistent state
             return
         }
 
-        val todoItem =
-            if (recyclerView == todoListingBinding.rvTodoItems)
-                todoItemsAdapter.getItemAtPosition(position)
-            else {
-                completedItemsAdapter.getItemAtPosition(position)
-            }
+        if (isSectionChanged(initialListState, startDragPosition, position)) {
+            // no need to re-load the items from the db, use cached list instead
+            adapter.items = initialListState
+        } else {
+            // get the start and end positions in absolute list (i.e.: without header items)
+            val dataPositions = getDataPositions(initialListState, startDragPosition, position)
+            todoViewModel.moveItem(
+                dataPositions.first,
+                dataPositions.second,
+                (initialListState[startDragPosition] as ContentItem).data
+            )
+        }
 
-        todoViewModel.moveItem(startDragPosition, position, todoItem)
+        // reset it
+        startDragPosition = -1
     }
 }

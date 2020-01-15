@@ -29,7 +29,11 @@ class TodoRepository(context: Context) {
         todoDao.delete(item)
     }
 
-    suspend fun moveItem(itemToMove: TodoItem, end: Int, start: Int) {
+    suspend fun moveItem(
+        itemToMove: TodoItem,
+        start: Int,
+        end: Int
+    ) {
         // get all the items in descending orders of item_order
         val allItems = todoDao.getAllItems(itemToMove.done)
 
