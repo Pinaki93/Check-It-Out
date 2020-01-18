@@ -3,6 +3,7 @@ package dev.pinaki.todoapp.ui.adapter
 import android.app.Application
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -134,6 +135,7 @@ class TodoItemAdapter(
         }
 
         fun setDateCompleted(dateCompeted: Date) {
+            binding.tvDate.visibility=View.VISIBLE
             binding.tvDate.text = application.getString(
                 R.string.lbl_item_completed_date,
                 dateCompeted.getAsDisplayString()
@@ -143,12 +145,7 @@ class TodoItemAdapter(
         }
 
         fun setDateModified(dateModified: Date) {
-            binding.tvDate.text = application.getString(
-                R.string.lbl_last_modified,
-                dateModified.getAsDisplayString()
-            )
-
-            binding.tvTitle.alpha = 1f
+            binding.tvDate.visibility=View.GONE
         }
 
         fun highlightItem(shouldHighlight: Boolean) {

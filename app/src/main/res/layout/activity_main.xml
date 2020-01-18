@@ -8,6 +8,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#F2F4F5"
             tools:context=".ui.activity.MainActivity">
 
 
@@ -25,11 +26,12 @@
                         android:id="@+id/tv_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:alpha=".60"
-                        android:gravity="start"
-                        android:padding="16dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
                         android:text="@string/lbl_all_items"
-                        android:textColor="@color/black"
+                        android:textColor="#011936"
                         android:textSize="24sp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -49,14 +51,17 @@
                 android:id="@+id/fab_add_todo_item"
                 android:layout_width="@dimen/fab_size"
                 android:layout_height="@dimen/fab_size"
+                app:backgroundTint="@color/colorAccent"
                 app:layout_anchor="@id/bottom_app_bar"
+                app:tint="@color/white"
                 app:srcCompat="@drawable/ic_add_black_24dp" />
 
         <com.google.android.material.bottomappbar.BottomAppBar
                 android:id="@+id/bottom_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:navigationIcon="@drawable/ic_menu_24dp"
                 android:layout_gravity="bottom"
-                app:fabAlignmentMode="center" />
+                app:fabAlignmentMode="end" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

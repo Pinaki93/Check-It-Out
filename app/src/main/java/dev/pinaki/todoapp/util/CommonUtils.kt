@@ -31,7 +31,7 @@ fun Date.getAsString(format: String): String {
     return SimpleDateFormat(format).format(this)
 }
 
-fun Date.getAsDisplayString() = getAsString("dd MMM YY, hh:mm a")
+fun Date.getAsDisplayString() = getAsString("dd MMM yy, hh:mm a")
 
 fun getDoneItems(allItems: List<TodoItem>): List<TodoItem> {
     return allItems.filter {

@@ -4,6 +4,7 @@ import android.app.Application
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -114,7 +115,10 @@ class TodoListingAdapter(val application: Application) :
         ) {
             holder.setItem(items[position] as HeaderItem)
         } else if (items[position] is ContentItem && holder is ContentViewHolder) {
-            bindHelper.bind(holder.getSwipeRevealLayout(), (items[position] as ContentItem).data.id.toString())
+            bindHelper.bind(
+                holder.getSwipeRevealLayout(),
+                (items[position] as ContentItem).data.id.toString()
+            )
             holder.setItem((items[position] as ContentItem).data)
 
         }
@@ -153,7 +157,7 @@ class TodoListingAdapter(val application: Application) :
                     }
 
                     if (payload.containsKey(DIFF_UTIL_ARG_DATE_MODIFIED)) {
-                        holder.setDateModified(Date(payload.getLong(DIFF_UTIL_ARG_DATE_MODIFIED)))
+                        holder.hideDate()
                     }
                 }
             }
@@ -222,17 +226,9 @@ class TodoListingAdapter(val application: Application) :
             binding.cbTodoDone.isChecked = todoItem.done
 
             if (todoItem.done) {
-                binding.tvDate.text = application.getString(
-                    R.string.lbl_item_completed_date,
-                    todoItem.dateCompeted!!.getAsDisplayString()
-                )
-                binding.tvTitle.alpha = .40f
+                setDateCompleted(todoItem.dateCompeted!!)
             } else {
-                binding.tvDate.text = application.getString(
-                    R.string.lbl_last_modified,
-                    todoItem.dateModified.getAsDisplayString()
-                )
-                binding.tvTitle.alpha = 1f
+                hideDate()
             }
         }
 
@@ -245,6 +241,7 @@ class TodoListingAdapter(val application: Application) :
         }
 
         fun setDateCompleted(dateCompeted: Date) {
+            binding.tvDate.visibility = View.VISIBLE
             binding.tvDate.text = application.getString(
                 R.string.lbl_item_completed_date,
                 dateCompeted.getAsDisplayString()
@@ -253,13 +250,8 @@ class TodoListingAdapter(val application: Application) :
             binding.tvTitle.alpha = .40f
         }
 
-        fun setDateModified(dateModified: Date) {
-            binding.tvDate.text = application.getString(
-                R.string.lbl_last_modified,
-                dateModified.getAsDisplayString()
-            )
-
-            binding.tvTitle.alpha = 1f
+        fun hideDate() {
+            binding.tvDate.visibility = View.GONE
         }
 
         fun getSwipeRevealLayout() = binding.swipeRevealLayoout
