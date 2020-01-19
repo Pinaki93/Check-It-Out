@@ -2,6 +2,7 @@ package dev.pinaki.todoapp.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import dev.pinaki.todoapp.R
@@ -24,11 +25,18 @@ class MainActivity : AppCompatActivity() {
         binding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+
+        binding.toolbarLayout.run {
+            if (supportActionBar == null) {
+                setSupportActionBar(binding.toolbarLayout)
+            } else {
+                visibility = View.GONE
+            }
+        }
+
         binding.fabAddTodoItem.setOnClickListener {
             AddTodoItemBottomSheet.show(supportFragmentManager)
         }
-
-        setSupportActionBar(binding.bottomAppBar)
 
         todoViewModel =
             TodoViewModel.instance(this, application, TodoRepository(applicationContext))
@@ -42,7 +50,8 @@ class MainActivity : AppCompatActivity() {
 //        })
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.content,
+            .add(
+                R.id.content,
                 TodoListingFragment()
             )
             .commitAllowingStateLoss()
