@@ -96,14 +96,10 @@ class AddTodoItemBottomSheet : BottomSheetDialogFragment(), View.OnClickListener
 
         const val TAG = "AddTodoItemBottomSheet"
 
-        fun newInstance() =
-            AddTodoItemBottomSheet()
+        private fun newInstance() = AddTodoItemBottomSheet()
 
         fun show(fragmentManager: FragmentManager) {
-            newInstance()
-                .show(fragmentManager,
-                    TAG
-                )
+            newInstance().show(fragmentManager, TAG)
         }
     }
 }

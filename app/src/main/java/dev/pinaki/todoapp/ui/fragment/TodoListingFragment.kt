@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dev.pinaki.todoapp.R
+import dev.pinaki.todoapp.bus.TodoBus
+import dev.pinaki.todoapp.bus.TodoBusItem
 import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.TodoListingBinding
@@ -59,9 +60,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         todoListingBinding =
             DataBindingUtil.inflate(inflater, R.layout.layout_todo_listing, container, false)
@@ -110,37 +109,19 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
                 }
             }
         })
+
+        TodoBus.observe(this, Observer {
+            when (it.eventId) {
+                TodoBusItem.EVENT_TODO_ITEM_ADDED -> {
+                    todoViewModel.loadTodos()
+                }
+            }
+        })
     }
 
-    private fun showUndoDeleteSnackbar(data: TodoItem) {
-        Snackbar
-            .make(todoListingBinding.root, "Item Deleted", Snackbar.LENGTH_INDEFINITE)
-            .setAction("Undo") {
-                todoViewModel.addTodo(data)
-            }.show()
-    }
-
-    private fun setUpRecyclerView() {
-        adapter = TodoListingAdapter(activity?.application!!)
-        todoListingBinding.rvItems.adapter = adapter
-        todoListingBinding.rvItems.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
-        todoListingBinding.rvItems.isNestedScrollingEnabled = false
-
-        adapter.onItemClick = onListItemClickListener
-        adapter.onItemDelete = onListItemDeleteClickListener
-
-        val itemTouchHelper = ItemTouchHelper(
-            TodoItemRecyclerViewCallback(
-                this,
-                todoListingBinding.rvItems
-            )
-        )
-
-        itemTouchHelper.attachToRecyclerView(todoListingBinding.rvItems)
-    }
-
+    /////////////////////////////////////////////////////////////////////////////////////
+    // Callbacks
+    /////////////////////////////////////////////////////////////////////////////////////
     override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {
         adapter.moveItem(initialPosition, finalPosition)
     }
@@ -173,5 +154,38 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
 
         // reset it
         startDragPosition = -1
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    // Private Util methods
+    /////////////////////////////////////////////////////////////////////////////////////
+    private fun setUpRecyclerView() {
+        adapter = TodoListingAdapter(activity?.application!!)
+        todoListingBinding.rvItems.adapter = adapter
+        todoListingBinding.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        todoListingBinding.rvItems.isNestedScrollingEnabled = false
+
+        adapter.onItemClick = onListItemClickListener
+        adapter.onItemDelete = onListItemDeleteClickListener
+
+        val itemTouchHelper = ItemTouchHelper(
+            TodoItemRecyclerViewCallback(
+                this,
+                todoListingBinding.rvItems
+            )
+        )
+
+        itemTouchHelper.attachToRecyclerView(todoListingBinding.rvItems)
+    }
+
+    private fun showUndoDeleteSnackbar(data: TodoItem) {
+        Snackbar
+            .make(todoListingBinding.root, "Item Deleted", Snackbar.LENGTH_INDEFINITE)
+            .setAction("Undo") {
+                todoViewModel.addTodo(data)
+            }.show()
     }
 }
