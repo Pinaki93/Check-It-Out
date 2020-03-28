@@ -4,7 +4,6 @@ import android.app.Application
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -53,11 +52,6 @@ data class ContentItem(val data: TodoItem) : TodoViewItem() {
             return false
         }
 
-//        logd(
-//            "DiffUtil",
-//            "returning ${(data.id == other.data.id && data.done == other.data.done)} for isItemTheSame called for $this and $other"
-//        )
-
         return data.id == other.data.id && data.done == other.data.done
     }
 
@@ -65,11 +59,6 @@ data class ContentItem(val data: TodoItem) : TodoViewItem() {
         if (other !is ContentItem) {
             return false
         }
-
-        logd(
-            "DiffUtil",
-            "returning ${data.isContentSame(other = other.data)} isContentSame called for $this and $other"
-        )
 
         return data.isContentSame(other = other.data)
     }
@@ -101,7 +90,6 @@ class TodoListingAdapter(val application: Application) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        logd("DiffUtilTest", "onCreateViewHolder called, viewType:$viewType")
         return if (viewType == ITEM_TYPE_HEADER)
             HeaderViewHolder(getHeaderBinding(LayoutInflater.from(parent.context), parent))
         else
@@ -120,7 +108,6 @@ class TodoListingAdapter(val application: Application) :
                 (items[position] as ContentItem).data.id.toString()
             )
             holder.setItem((items[position] as ContentItem).data)
-
         }
     }
 
@@ -149,7 +136,10 @@ class TodoListingAdapter(val application: Application) :
                     }
 
                     if (payload.containsKey(DIFF_UTIL_ARG_DONE)) {
-                        holder.setDone(payload.getBoolean(DIFF_UTIL_ARG_DONE, false))
+                        val todoViewItem = items[position]
+                        if (todoViewItem is ContentItem) {
+                            holder.setItem(todoViewItem.data)
+                        }
                     }
 
                     if (payload.containsKey(DIFF_UTIL_ARG_DATE_COMPLETED)) {
@@ -236,12 +226,8 @@ class TodoListingAdapter(val application: Application) :
             binding.tvTitle.text = title
         }
 
-        fun setDone(done: Boolean) {
-            binding.cbTodoDone.isChecked = done
-        }
-
         fun setDateCompleted(dateCompeted: Date) {
-            binding.tvDate.visibility = View.VISIBLE
+            binding.tvDate.visible()
             binding.tvDate.text = application.getString(
                 R.string.lbl_item_completed_date,
                 dateCompeted.getAsDisplayString()
@@ -251,7 +237,8 @@ class TodoListingAdapter(val application: Application) :
         }
 
         fun hideDate() {
-            binding.tvDate.visibility = View.GONE
+            binding.tvDate.gone()
+            binding.tvTitle.alpha = 1f
         }
 
         fun getSwipeRevealLayout() = binding.swipeRevealLayoout

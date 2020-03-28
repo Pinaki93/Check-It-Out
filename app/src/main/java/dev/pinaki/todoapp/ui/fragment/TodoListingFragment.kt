@@ -133,24 +133,12 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
 
         val itemTouchHelper = ItemTouchHelper(
             TodoItemRecyclerViewCallback(
-                activity!!, this,
-                todoListingBinding.rvItems,
-                R.drawable.ic_delete_white_24dp,
-                ContextCompat.getColor(activity!!, R.color.deleteColor),
-                R.drawable.ic_mode_edit_white_24dp,
-                ContextCompat.getColor(activity!!, R.color.favColor)
+                this,
+                todoListingBinding.rvItems
             )
         )
 
         itemTouchHelper.attachToRecyclerView(todoListingBinding.rvItems)
-    }
-
-    override fun onSwipeLeft(recyclerView: RecyclerView, position: Int) {
-        todoViewModel.deleteItem((adapter.items[position] as ContentItem).data)
-    }
-
-    override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
-        TODO("Not implemented right swipe yet")
     }
 
     override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {

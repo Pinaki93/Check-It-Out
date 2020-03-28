@@ -10,4 +10,5 @@
     <color name="bubbles">#f3f5f9</color>
     <color name="mantis">#63C132</color>
     <color name="yellowRed">#E9B872</color>
+    <color name="testAccentColor">#EE964B</color>
 </resources>

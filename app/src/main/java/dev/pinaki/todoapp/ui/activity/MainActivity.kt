@@ -26,13 +26,13 @@ class MainActivity : AppCompatActivity() {
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
 
-        binding.toolbarLayout.run {
-            if (supportActionBar == null) {
-                setSupportActionBar(binding.toolbarLayout)
-            } else {
-                visibility = View.GONE
-            }
-        }
+//        binding.toolbarLayout.run {
+//            if (supportActionBar == null) {
+//                setSupportActionBar(binding.toolbarLayout)
+//            } else {
+//                visibility = View.GONE
+//            }
+//        }
 
         binding.fabAddTodoItem.setOnClickListener {
             AddTodoItemBottomSheet.show(supportFragmentManager)

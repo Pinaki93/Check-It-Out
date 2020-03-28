@@ -3,11 +3,13 @@ package dev.pinaki.todoapp.util
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -22,6 +24,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+fun View.visible() {
+    visibility = View.VISIBLE
+}
+
 fun View.gone() {
     visibility = View.GONE
 }
@@ -32,18 +38,6 @@ fun Date.getAsString(format: String): String {
 }
 
 fun Date.getAsDisplayString() = getAsString("dd MMM yy, hh:mm a")
-
-fun getDoneItems(allItems: List<TodoItem>): List<TodoItem> {
-    return allItems.filter {
-        it.done
-    }
-}
-
-fun getTodoItems(allItems: List<TodoItem>): List<TodoItem> {
-    return allItems.filter {
-        !it.done
-    }
-}
 
 fun Activity?.toast(message: String) {
     if (this != null) {
@@ -155,10 +149,10 @@ fun getViewItems(context: Context, items: List<TodoItem>): MutableList<TodoViewI
                 itemsToDo.add(ContentItem(item))
         }
 
-        add(HeaderItem(context.getString(R.string.lbl_items_to_do), itemsToDo.size))
+//        add(HeaderItem(context.getString(R.string.lbl_items_to_do), itemsToDo.size))
         addAll(itemsToDo)
 
-        add(HeaderItem(context.getString(R.string.lbl_completed_items), itemsCompleted.size))
+//        add(HeaderItem(context.getString(R.string.lbl_completed_items), itemsCompleted.size))
         addAll(itemsCompleted)
     }
 }
@@ -211,7 +205,11 @@ fun isSectionChanged(list: List<TodoViewItem>, initialPosition: Int, endPosition
 /**
  * Returns the start and end positions in absolute list (i.e.: without header items)
  */
-fun getDataPositions(list: List<TodoViewItem>, initialPosition: Int, endPosition: Int): Pair<Int, Int> {
+fun getDataPositions(
+    list: List<TodoViewItem>,
+    initialPosition: Int,
+    endPosition: Int
+): Pair<Int, Int> {
     fun removeHeaderItems(list: List<TodoViewItem>): List<TodoViewItem> {
         return list.filter {
             it !is HeaderItem
@@ -228,4 +226,8 @@ fun getDataPositions(list: List<TodoViewItem>, initialPosition: Int, endPosition
     return Pair(cleanList.indexOf(initialItem), cleanList.indexOf(endItem))
 }
 
-fun logd(tag: String, message: String) = Log.d(tag, message)
+fun TextView.showStrikeThrough(show: Boolean) {
+    paintFlags =
+        if (show) paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        else paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+}

@@ -5,5 +5,4 @@
 
     <item android:state_checked="false"
             android:drawable="@drawable/ic_radio_button_unchecked_black_24dp"/>
-
 </selector>

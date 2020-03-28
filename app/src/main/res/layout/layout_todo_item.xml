@@ -5,83 +5,73 @@
 
     <data class="TodoItemBinding" />
 
-    <FrameLayout
+    <com.chauthai.swipereveallayout.SwipeRevealLayout
+            android:id="@+id/swipe_reveal_layoout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="3dp"
-            android:background="@drawable/bg_rounded_corners">
+            app:dragEdge="right"
+            app:mode="same_level">
 
-        <com.chauthai.swipereveallayout.SwipeRevealLayout
-                android:id="@+id/swipe_reveal_layoout"
+        <!--Swipe Menu-->
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="horizontal">
+
+            <ImageButton
+                    android:id="@+id/btn_delete"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/deleteColor"
+                    android:src="@drawable/ic_delete_white_24dp" />
+        </LinearLayout>
+
+        <!--Main Layout-->
+        <LinearLayout
+                android:id="@+id/todo_item_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:dragEdge="right"
-                app:mode="same_level">
+                android:orientation="horizontal"
+                android:paddingLeft="24dp"
+                android:paddingTop="12dp"
+                android:paddingRight="24dp"
+                android:paddingBottom="12dp">
 
-            <!--Swipe Menu-->
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/cb_todo_done"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="16dp"
+                    android:button="@drawable/checked"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
 
-                <ImageButton
-                        android:id="@+id/btn_delete"
-                        android:layout_width="80dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/deleteColor"
-                        android:src="@drawable/ic_delete_white_24dp" />
-            </LinearLayout>
-
-            <!--Main Layout-->
             <LinearLayout
-                    android:id="@+id/todo_item_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp">
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/cb_todo_done"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
-                        android:layout_marginRight="8dp"
-                        android:button="@drawable/checked"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"/>
-
-                <LinearLayout
+                <TextView
+                        android:id="@+id/tv_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
+                        android:paddingBottom="2dp"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:fontFamily="sans-serif"
+                        tools:text="Collect Laundry" />
 
-                    <TextView
-                            android:id="@+id/tv_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="2dp"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            app:fontFamily="sans-serif"
-                            tools:text="Collect Laundry" />
-
-                    <TextView
-                            android:id="@+id/tv_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            app:fontFamily="sans-serif-light"
-                            tools:text="Last Modified on 13th September 2019" />
-                </LinearLayout>
+                <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        app:fontFamily="sans-serif-light"
+                        tools:text="Last Modified on 13th September 2019" />
             </LinearLayout>
-        </com.chauthai.swipereveallayout.SwipeRevealLayout>
-    </FrameLayout>
+        </LinearLayout>
+    </com.chauthai.swipereveallayout.SwipeRevealLayout>
 </layout>
