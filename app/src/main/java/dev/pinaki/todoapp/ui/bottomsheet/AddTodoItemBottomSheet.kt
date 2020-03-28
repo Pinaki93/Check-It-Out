@@ -16,6 +16,7 @@ import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.AddTodoItemBinding
 import dev.pinaki.todoapp.ds.Result
+import dev.pinaki.todoapp.util.toast
 import dev.pinaki.todoapp.viewmodel.TodoViewModel
 
 class AddTodoItemBottomSheet : BottomSheetDialogFragment(), View.OnClickListener {
@@ -87,7 +88,11 @@ class AddTodoItemBottomSheet : BottomSheetDialogFragment(), View.OnClickListener
         when (v?.id) {
             R.id.btn_add_todo_item -> {
                 val task = binding.etTodoItem.text.toString()
-                todoViewModel.addTodo(TodoItem(title = task, done = false))
+                if(task.isEmpty()){
+                    toast(getString(R.string.err_item_name_empty))
+                }else{
+                    todoViewModel.addTodo(TodoItem(title = task, done = false))
+                }
             }
         }
     }
