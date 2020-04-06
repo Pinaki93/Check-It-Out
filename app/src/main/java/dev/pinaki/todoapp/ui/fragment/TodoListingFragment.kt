@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -134,8 +135,8 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
     }
 
     override fun onItemReleased(recyclerView: RecyclerView, position: Int) {
-        if (startDragPosition == -1) {
-            //TODO: Log it - inconsistent state
+        if (startDragPosition == -1 || position == -1 || startDragPosition == position) {
+            startDragPosition = -1
             return
         }
 
@@ -156,6 +157,17 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
         startDragPosition = -1
     }
 
+    override fun onSwipeLeft(recyclerView: RecyclerView, position: Int) {
+        val item = adapter.items[position]
+        if (item is ContentItem) {
+            todoViewModel.deleteItem(item.data)
+        }
+    }
+
+    override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////
     // Private Util methods
@@ -173,8 +185,12 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
 
         val itemTouchHelper = ItemTouchHelper(
             TodoItemRecyclerViewCallback(
-                this,
-                todoListingBinding.rvItems
+                activity!!, this,
+                todoListingBinding.rvItems,
+                R.drawable.ic_delete_white_24dp,
+                ContextCompat.getColor(activity!!, R.color.deleteColor),
+                R.drawable.ic_mode_edit_white_24dp,
+                ContextCompat.getColor(activity!!, R.color.favColor)
             )
         )
 

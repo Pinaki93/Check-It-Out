@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.chauthai.swipereveallayout.ViewBinderHelper
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.TodoHeaderBinding
@@ -83,12 +82,6 @@ class TodoListingAdapter(val application: Application) :
             diff.dispatchUpdatesTo(this)
         }
 
-    private val bindHelper = ViewBinderHelper()
-
-    init {
-        bindHelper.setOpenOnlyOne(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ITEM_TYPE_HEADER)
             HeaderViewHolder(getHeaderBinding(LayoutInflater.from(parent.context), parent))
@@ -103,10 +96,6 @@ class TodoListingAdapter(val application: Application) :
         ) {
             holder.setItem(items[position] as HeaderItem)
         } else if (items[position] is ContentItem && holder is ContentViewHolder) {
-            bindHelper.bind(
-                holder.getSwipeRevealLayout(),
-                (items[position] as ContentItem).data.id.toString()
-            )
             holder.setItem((items[position] as ContentItem).data)
         }
     }
@@ -194,20 +183,13 @@ class TodoListingAdapter(val application: Application) :
             binding.todoItemContainer.setOnClickListener {
                 if (items[adapterPosition] is ContentItem) {
                     onItemClick?.invoke((items[adapterPosition] as ContentItem).data.copy())
-                    binding.swipeRevealLayoout.close(true)
                 }
             }
 
             binding.cbTodoDone.setOnClickListener {
                 if (items[adapterPosition] is ContentItem) {
                     onItemClick?.invoke((items[adapterPosition] as ContentItem).data.copy())
-                    binding.swipeRevealLayoout.close(true)
                 }
-            }
-
-            binding.btnDelete.setOnClickListener {
-                onItemDelete?.invoke((items[adapterPosition] as ContentItem).data)
-                binding.swipeRevealLayoout.close(true)
             }
         }
 
@@ -240,8 +222,6 @@ class TodoListingAdapter(val application: Application) :
             binding.tvDate.gone()
             binding.tvTitle.alpha = 1f
         }
-
-        fun getSwipeRevealLayout() = binding.swipeRevealLayoout
 
         fun highlightItem(shouldHighlight: Boolean) {
             val elevation = if (shouldHighlight) 16 else 0

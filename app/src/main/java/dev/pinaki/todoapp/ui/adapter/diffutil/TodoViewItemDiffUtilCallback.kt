@@ -8,9 +8,4 @@ class TodoViewItemDiffUtilCallback(
     private val oldList: List<TodoViewItem>,
     private val newList: List<TodoViewItem>
 ) :
-    BaseDiffUtilCallback<TodoViewItem>(oldList, newList) {
-
-    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        return oldList[oldItemPosition].getChangePayload(newList[newItemPosition])
-    }
-}
+    BaseDiffUtilCallback<TodoViewItem>(oldList, newList)
