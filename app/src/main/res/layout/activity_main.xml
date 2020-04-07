@@ -11,40 +11,31 @@
             android:background="#FDFFFC"
             tools:context=".ui.activity.MainActivity">
 
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                    android:id="@+id/tv_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/fab_size"
-                    android:orientation="vertical">
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="@string/lbl_all_items"
+                    android:textColor="#011936"
+                    android:textSize="24sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                        android:id="@+id/tv_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:paddingTop="16dp"
-                        android:paddingBottom="16dp"
-                        android:text="@string/lbl_all_items"
-                        android:textColor="#011936"
-                        android:textSize="24sp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                <FrameLayout
-                        android:id="@+id/content"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="?attr/actionBarSize" />
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
+            <FrameLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_add_todo_item"
