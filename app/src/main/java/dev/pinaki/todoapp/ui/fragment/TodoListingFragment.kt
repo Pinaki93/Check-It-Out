@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -165,7 +164,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
     }
 
     override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        todoViewModel.loadTodos()
     }
 
 
@@ -185,12 +184,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
 
         val itemTouchHelper = ItemTouchHelper(
             TodoItemRecyclerViewCallback(
-                activity!!, this,
-                todoListingBinding.rvItems,
-                R.drawable.ic_delete_white_24dp,
-                ContextCompat.getColor(activity!!, R.color.deleteColor),
-                R.drawable.ic_mode_edit_white_24dp,
-                ContextCompat.getColor(activity!!, R.color.favColor)
+                this, todoListingBinding.rvItems
             )
         )
 
@@ -198,8 +192,9 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
     }
 
     private fun showUndoDeleteSnackbar(data: TodoItem) {
+        //TODO: add to strings.xml
         Snackbar
-            .make(todoListingBinding.root, "Item Deleted", Snackbar.LENGTH_INDEFINITE)
+            .make(todoListingBinding.root, "Item Deleted", Snackbar.LENGTH_LONG)
             .setAction("Undo") {
                 todoViewModel.addTodo(data)
             }.show()
