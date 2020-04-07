@@ -196,7 +196,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
         Snackbar
             .make(todoListingBinding.root, "Item Deleted", Snackbar.LENGTH_LONG)
             .setAction("Undo") {
-                todoViewModel.addTodo(data)
+                todoViewModel.addTodo(data, false)
             }.show()
     }
 }

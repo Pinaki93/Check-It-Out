@@ -9,7 +9,6 @@ import dev.pinaki.todoapp.ds.Event
 import dev.pinaki.todoapp.ds.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class TodoViewModel(
     application: Application,
@@ -43,12 +42,12 @@ class TodoViewModel(
         }
     }
 
-    fun addTodo(todoItem: TodoItem) {
+    fun addTodo(todoItem: TodoItem, updateOrderId: Boolean = true) {
         launchInIOScope {
             _addTodoResult.postValue(Event(Result.Loading))
 
             try {
-                repository.addTodo(todoItem)
+                repository.addTodo(todoItem, updateOrderId)
                 _addTodoResult.postValue(Event(Result.Success()))
             } catch (e: Exception) {
                 e.printStackTrace()

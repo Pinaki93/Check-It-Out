@@ -12,12 +12,14 @@ class TodoRepository(context: Context) {
 
     suspend fun getAll() = todoDao.getAll()
 
-    suspend fun addTodo(item: TodoItem) {
+    suspend fun addTodo(item: TodoItem, updateOrderId: Boolean) {
         val insertId = todoDao.add(item).toInt()
 
-        val insertedItem = todoDao.getItem(insertId)
-        insertedItem.itemOrder = (insertId + 1).toDouble()
-        todoDao.update(insertedItem)
+        if (updateOrderId) {
+            val insertedItem = todoDao.getItem(insertId)
+            insertedItem.itemOrder = (insertId + 1).toDouble()
+            todoDao.update(insertedItem)
+        }
     }
 
     suspend fun updateTodo(item: TodoItem) {
