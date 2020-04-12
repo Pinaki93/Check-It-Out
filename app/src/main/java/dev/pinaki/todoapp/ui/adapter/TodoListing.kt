@@ -230,7 +230,7 @@ class TodoListingAdapter(val application: Application) :
             binding.root.setBackgroundColor(Color.parseColor(if (shouldHighlight) "#fcfcfc" else "#ffffff"))
         }
 
-        fun getContentView() = binding.todoItemContainer
+        fun getContentView() = binding.todoItemContainerParent
     }
 }
 
