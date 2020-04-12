@@ -195,8 +195,9 @@ class TodoListingAdapter(val application: Application) :
 
         fun setItem(todoItem: TodoItem) {
             binding.tvTitle.text = todoItem.title
-            binding.cbTodoDone.isChecked = todoItem.done
+            binding.tvTitle.showStrikeThrough(todoItem.done)
 
+            binding.cbTodoDone.isChecked = todoItem.done
             if (todoItem.done) {
                 setDateCompleted(todoItem.dateCompeted!!)
             } else {

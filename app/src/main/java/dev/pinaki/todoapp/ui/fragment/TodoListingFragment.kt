@@ -23,7 +23,6 @@ import dev.pinaki.todoapp.ui.adapter.TodoListingAdapter
 import dev.pinaki.todoapp.ui.adapter.TodoViewItem
 import dev.pinaki.todoapp.ui.adapter.swipeanddrag.OnItemInteractionListener
 import dev.pinaki.todoapp.ui.adapter.swipeanddrag.TodoItemRecyclerViewCallback
-import dev.pinaki.todoapp.util.getDataPositions
 import dev.pinaki.todoapp.util.getViewItems
 import dev.pinaki.todoapp.util.isSectionChanged
 import dev.pinaki.todoapp.util.toast
@@ -81,7 +80,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
         todoViewModel.loadTodos()
 
         todoViewModel.todos.observe(this, Observer {
-            adapter.items = getViewItems(context!!, it)
+            adapter.items = getViewItems(it)
         })
 
         todoViewModel.saveTodoResult.observe(this, Observer {
