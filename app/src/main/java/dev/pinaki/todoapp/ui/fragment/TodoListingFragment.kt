@@ -144,10 +144,9 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener {
             adapter.items = initialListState
         } else {
             // get the start and end positions in absolute list (i.e.: without header items)
-            val dataPositions = getDataPositions(initialListState, startDragPosition, position)
             todoViewModel.moveItem(
-                dataPositions.first,
-                dataPositions.second,
+                startDragPosition,
+                position,
                 (initialListState[startDragPosition] as ContentItem).data
             )
         }

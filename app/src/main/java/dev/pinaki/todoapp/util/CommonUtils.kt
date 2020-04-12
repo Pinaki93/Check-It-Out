@@ -138,23 +138,11 @@ fun TodoViewItem.getChangePayload(other: TodoViewItem): Bundle {
 }
 
 fun getViewItems(context: Context, items: List<TodoItem>): MutableList<TodoViewItem> {
-    return ArrayList<TodoViewItem>().apply {
-        val itemsToDo = ArrayList<TodoViewItem>()
-        val itemsCompleted = ArrayList<TodoViewItem>()
-
-        for (item in items) {
-            if (item.done)
-                itemsCompleted.add(ContentItem(item))
-            else
-                itemsToDo.add(ContentItem(item))
-        }
-
-//        add(HeaderItem(context.getString(R.string.lbl_items_to_do), itemsToDo.size))
-        addAll(itemsToDo)
-
-//        add(HeaderItem(context.getString(R.string.lbl_completed_items), itemsCompleted.size))
-        addAll(itemsCompleted)
+    val sortedItems = items.map {
+        ContentItem(it)
     }
+
+    return ArrayList(sortedItems)
 }
 
 fun Bundle?.isNotEmpty() = this?.isEmpty != true

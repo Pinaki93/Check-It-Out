@@ -4,13 +4,16 @@ import android.content.Context
 import dev.pinaki.todoapp.data.db.TodoDatabase
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TodoRepository(context: Context) {
 
     private val db = TodoDatabase.getInstance(context)
     private val todoDao = db.todoDao()
 
-    suspend fun getAll() = todoDao.getAll()
+    suspend fun getAll() = todoDao.getAll().sortedBy {
+        it.done
+    }
 
     suspend fun addTodo(item: TodoItem, updateOrderId: Boolean) {
         val insertId = todoDao.add(item).toInt()
@@ -36,10 +39,32 @@ class TodoRepository(context: Context) {
         start: Int,
         end: Int
     ) {
-        // get all the items in descending orders of item_order
-        val allItems = todoDao.getAllItems(itemToMove.done)
+        // items sorted with unchecked items first followed by checked items
+        val allItems = getAll()
+        val itemsMap = allItems.groupBy {
+            it.done
+        }
 
-        val size = allItems.size
+        val uncheckedItems: List<TodoItem> = itemsMap[false] ?: ArrayList()
+        val totalUncheckedItems = uncheckedItems.size
+
+        val listToConsider =
+            itemsMap[itemToMove.done] ?: error("Trying to move item in an empty list")
+        val listStart = if (itemToMove.done) start - totalUncheckedItems else start
+        val listEnd = if (itemToMove.done) end - totalUncheckedItems else end
+
+        // move the item in the sublist (i.e either in the list of
+        // unchecked items or in the list of checked items)
+        moveTodoItem(itemToMove, listToConsider, listStart, listEnd)
+    }
+
+    private suspend fun moveTodoItem(
+        item: TodoItem,
+        list: List<TodoItem>,
+        start: Int,
+        end: Int
+    ) {
+        val size = list.size
 
         // we will take item_order of the items before and after the item to be moved
         // and then assign the average of their item_order to our current item
@@ -48,7 +73,7 @@ class TodoRepository(context: Context) {
         // by default we will consider this to be 1 greater
         // than the highest `item_order` item
         // [i.e: the highest item_order within the list]
-        var beforeIndex = allItems[0].itemOrder + 1
+        var beforeIndex = list[0].itemOrder + 1
 
         // 2. after index: the item_order of the item after the item to be moved
         // by default we will take it to be zero,
@@ -60,13 +85,13 @@ class TodoRepository(context: Context) {
             // item being placed at the top
             // we already have before index as 1 greater than the highest
             // so after index will be the highest item_order in the list
-            afterIndex = allItems[end].itemOrder
+            afterIndex = list[end].itemOrder
         } else if (end == size - 1) {
             // worst case scenario 2
             // item being placed at the bottom
             // we already have after index as 0
             // so before index will be the lowest item_order in the list (>0)
-            beforeIndex = allItems[end].itemOrder
+            beforeIndex = list[end].itemOrder
         } else {
             // middle scenarios
             if (start > end) {
@@ -74,22 +99,26 @@ class TodoRepository(context: Context) {
                 // so eg we have 4 items 1,2,3,4 and 1 is being between 3 and 4,
                 // it's position will move from index 0 to 2 and we will have
                 // to give it a item_order between items[2] and items[3]
-                beforeIndex = allItems[end - 1].itemOrder
-                afterIndex = allItems[end].itemOrder
+                val beforeItem = list[end - 1]
+                beforeIndex = beforeItem.itemOrder
+                val afterItem = list[end]
+                afterIndex = afterItem.itemOrder
             } else {
                 // item being dragged down
                 // so eg we have 4 items 1,2,3,4 and 4 is being between 1 and 2,
                 // it's position will move from index 3 to 1 and we will have
                 // to give it a item_order between items[0] and items[1]
-                beforeIndex = allItems[end].itemOrder
-                afterIndex = allItems[end + 1].itemOrder
+                val beforeItem = list[end]
+                beforeIndex = beforeItem.itemOrder
+                val afterItem = list[end + 1]
+                afterIndex = afterItem.itemOrder
             }
         }
 
         // finally average out the before and after index
         // so that we can give an average weight between the two items
         val newItemIndex = (beforeIndex + afterIndex) / 2
-        itemToMove.itemOrder = newItemIndex
-        updateTodo(itemToMove)
+        item.itemOrder = newItemIndex
+        updateTodo(item)
     }
 }
