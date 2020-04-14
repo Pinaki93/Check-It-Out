@@ -4,8 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -16,6 +21,7 @@ import dev.pinaki.todoapp.ui.adapter.TodoViewItem
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 fun View.visible() {
     visibility = View.VISIBLE
@@ -120,4 +126,36 @@ fun TextView.showStrikeThrough(show: Boolean) {
     paintFlags =
         if (show) paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         else paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+// Util methods for determining if keyboard is open or closed
+/////////////////////////////////////////////////////////////////////////////////////
+fun Activity.getRootView(): View {
+    return findViewById<View>(Window.ID_ANDROID_CONTENT)
+}
+
+fun Context.convertDpToPx(dp: Float): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp,
+        this.resources.displayMetrics
+    )
+}
+
+fun Activity.isKeyboardOpen(): Boolean {
+    val visibleBounds = Rect()
+    this.getRootView().getWindowVisibleDisplayFrame(visibleBounds)
+    val heightDiff = getWindowHeight() - visibleBounds.height()
+    val marginOfError = convertDpToPx(50F).roundToInt()
+
+    return heightDiff > marginOfError
+}
+
+fun Context.getWindowHeight(): Int {
+    val displayMetrics = DisplayMetrics()
+    val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+    return displayMetrics.heightPixels
 }
