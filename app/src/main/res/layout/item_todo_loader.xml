@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/todo_item_container_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingTop="12dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="12dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_radio_button_unchecked_black_24dp"
+                android:tint="@color/shimmer_base_color" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+            <View
+                    android:layout_width="300dp"
+                    android:layout_height="16dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/shimmer_base_color" />
+
+            <TextView
+                    android:layout_width="240dp"
+                    android:layout_height="12dp"
+                    android:background="@color/shimmer_base_color" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

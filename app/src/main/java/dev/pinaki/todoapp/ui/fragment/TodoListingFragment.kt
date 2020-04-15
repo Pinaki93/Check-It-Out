@@ -105,10 +105,29 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
             TodoRepository(activity!!.application)
         )
 
-        todoViewModel.loadTodos()
-
         todoViewModel.todos.observe(this, Observer {
-            adapter.items = getViewItems(it)
+            when (val contentIfNotHandled: Result<List<TodoItem>>? = it.getContentIfNotHandled()) {
+                is Result.Loading -> {
+                    if (adapter.items.isEmpty()) {
+                        showLoaderView(true)
+                        showContentView(false)
+                    }
+                }
+
+                is Result.Success -> {
+                    showLoaderView(false)
+                    showContentView(true)
+
+                    contentIfNotHandled.data?.let { list ->
+                        adapter.items = getViewItems(list)
+                    }
+                }
+
+                is Result.Error -> {
+                    contentIfNotHandled.cause.printStackTrace()
+                    toast(getString(R.string.msg_error_occurred))
+                }
+            }
         })
 
         todoViewModel.saveTodoResult.observe(this, Observer {
@@ -159,6 +178,10 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
                 }
             }
         })
+
+        showLoaderView(true)
+        showContentView(false)
+        todoViewModel.loadTodos()
     }
 
     override fun onResume() {
@@ -282,6 +305,26 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
             todoViewModel.addTodo(TodoItem(title = task, done = false))
         else
             toast(getString(R.string.err_item_name_empty))
+    }
+
+    private fun showLoaderView(shouldShow: Boolean) {
+        if (shouldShow) {
+            todoListingBinding.loaderLayout.visible()
+            todoListingBinding.loaderLayout.startShimmer()
+        } else {
+            todoListingBinding.loaderLayout.gone()
+            todoListingBinding.loaderLayout.stopShimmer()
+        }
+    }
+
+    private fun showContentView(shouldShow: Boolean) {
+        if (shouldShow) {
+            todoListingBinding.mainLayout.visible()
+            todoListingBinding.cvAddItem.visible()
+        } else {
+            todoListingBinding.mainLayout.gone()
+            todoListingBinding.cvAddItem.gone()
+        }
     }
 
     private fun smoothScrollToTop() {

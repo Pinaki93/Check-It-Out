@@ -7,4 +7,5 @@
     <color name="white">#ffffff</color>
     <color name="deleteColor">#D1495B</color>
     <color name="favColor">#F4E285</color>
+    <color name="shimmer_base_color">#dddddd</color>
 </resources>

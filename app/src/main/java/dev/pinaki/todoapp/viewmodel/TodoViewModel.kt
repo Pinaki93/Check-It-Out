@@ -15,8 +15,8 @@ class TodoViewModel(
     private val repository: TodoRepository
 ) : AndroidViewModel(application) {
 
-    private val _todos: MutableLiveData<List<TodoItem>> = MutableLiveData()
-    val todos: LiveData<List<TodoItem>>
+    private val _todos: MutableLiveData<Event<Result<List<TodoItem>>>> = MutableLiveData()
+    val todos: LiveData<Event<Result<List<TodoItem>>>>
         get() = _todos
 
     private var _addTodoResult: MutableLiveData<Event<Result<Any>>> = MutableLiveData()
@@ -38,7 +38,14 @@ class TodoViewModel(
 
     fun loadTodos() {
         launchInIOScope {
-            _todos.postValue(repository.getAll())
+            try {
+                _todos.postValue(Event(Result.Loading))
+
+                val allTodos = repository.getAll()
+                _todos.postValue(Event(Result.Success(allTodos)))
+            } catch (e: Exception) {
+                _todos.postValue(Event(Result.Error(e)))
+            }
         }
     }
 
