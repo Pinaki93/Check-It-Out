@@ -37,7 +37,6 @@ class AddTodoItemView : ConstraintLayout, CompoundButton.OnCheckedChangeListener
     )
 
     init {
-
         binding.cbShowDescription.isChecked = false
         binding.cbShowDescription.setOnCheckedChangeListener(this)
 
@@ -52,36 +51,37 @@ class AddTodoItemView : ConstraintLayout, CompoundButton.OnCheckedChangeListener
         if (shouldShow) {
             binding.btnAddTodoItem.gone()
             binding.cbShowDescription.gone()
-            showDescription(false)
+            binding.etTodoItemDescription.gone()
+            binding.flOptions.gone()
         } else {
             binding.btnAddTodoItem.visible()
             binding.cbShowDescription.visible()
-            showDescription(binding.cbShowDescription.isChecked, false)
+            binding.flOptions.visible()
+
+            if (binding.cbShowDescription.isChecked)
+                binding.etTodoItemDescription.visible()
+            else
+                binding.etTodoItemDescription.gone()
         }
     }
 
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        if (buttonView?.id == R.id.cb_show_description) {
-            showDescription(isChecked)
-        }
-    }
-
-    private fun showDescription(shouldShow: Boolean, shouldFocus: Boolean = true) {
+    private fun showDescription(shouldShow: Boolean) {
         if (shouldShow) {
             binding.etTodoItemDescription.visible()
-            if (shouldFocus)
-                context.showKeyboard(binding.etTodoItemDescription)
+            context.showKeyboard(binding.etTodoItemDescription)
         } else {
             binding.etTodoItemDescription.gone()
+            context.showKeyboard(binding.etTodoItem)
         }
     }
 
     fun getItemText(): Pair<String, String> =
         Pair(binding.etTodoItem.text.toString(), binding.etTodoItemDescription.text.toString())
 
-    fun clearText() {
+    fun prepareForNewItem() {
         binding.etTodoItem.text.clear()
         binding.etTodoItemDescription.text.clear()
+        context.showKeyboard(binding.etTodoItem)
     }
 
     override fun onClick(v: View?) {
@@ -91,8 +91,23 @@ class AddTodoItemView : ConstraintLayout, CompoundButton.OnCheckedChangeListener
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        listener?.onAddTodoItem()
+        if (v == binding.etTodoItem) {
+            if (binding.cbShowDescription.isChecked) {
+                context.showKeyboard(binding.etTodoItemDescription)
+            } else {
+                listener?.onAddTodoItem()
+            }
+        } else {
+            listener?.onAddTodoItem()
+        }
+
         return true
+    }
+
+    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+        if (buttonView?.id == R.id.cb_show_description) {
+            showDescription(isChecked)
+        }
     }
 }
 

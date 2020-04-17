@@ -21,7 +21,7 @@ abstract class TodoDatabase : RoomDatabase() {
     companion object {
 
         //TODO: move these constants to build config
-        const val DB_VERSION = 2
+        const val DB_VERSION = 3
         private const val DB_NAME = "todo_db"
 
         private lateinit var instance: TodoDatabase
@@ -36,7 +36,7 @@ abstract class TodoDatabase : RoomDatabase() {
                                 TodoDatabase::class.java,
                                 DB_NAME
                             )
-                            .addMigrations(migration1to2)
+                            .addMigrations(migration1to2, migration2to3)
                             .build()
                     }
                 }
@@ -52,5 +52,11 @@ val migration1to2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE todo_item add COLUMN item_order REAL NOT NULL DEFAULT 0")
         database.execSQL("UPDATE todo_item set item_order=(id+1)")
+    }
+}
+
+val migration2to3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE todo_item add COLUMN item_description TEXT DEFAULT NULL")
     }
 }

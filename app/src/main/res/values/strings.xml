@@ -13,4 +13,5 @@
     <string name="err_item_name_empty">Item name can\'t be empty</string>
     <string name="msg_add_an_item">Add an item</string>
     <string name="msg_add_description">Add description</string>
+    <string name="ellipsis" msgid="7899829516048813237">…</string>
 </resources>

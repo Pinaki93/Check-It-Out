@@ -14,6 +14,9 @@ data class TodoItem(
     @ColumnInfo(name = "title")
     var title: String,
 
+    @ColumnInfo(name = "item_description")
+    var description: String? = null,
+
     @ColumnInfo(name = "is_done")
     var done: Boolean,
 

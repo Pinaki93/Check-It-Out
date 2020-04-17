@@ -39,11 +39,12 @@
                     android:src="@drawable/ic_delete_white_24dp" />
         </RelativeLayout>
 
-        <FrameLayout
+        <LinearLayout
                 android:id="@+id/todo_item_container_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical">
 
             <LinearLayout
                     android:id="@+id/todo_item_container"
@@ -58,8 +59,7 @@
 
                 <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content">
 
                     <androidx.appcompat.widget.AppCompatCheckBox
                             android:id="@+id/cb_todo_done"
@@ -71,33 +71,55 @@
                             android:minWidth="0dp"
                             android:minHeight="0dp" />
 
-                    <LinearLayout
+                    <TextView
+                            android:id="@+id/tv_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:orientation="vertical">
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            app:fontFamily="sans-serif"
+                            tools:text="Collect Laundry" />
+                </LinearLayout>
 
-                        <TextView
-                                android:id="@+id/tv_title"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingBottom="2dp"
-                                android:textColor="@color/black"
-                                android:textSize="16sp"
-                                app:fontFamily="sans-serif"
-                                tools:text="Collect Laundry" />
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:orientation="vertical">
 
-                        <TextView
-                                android:id="@+id/tv_date"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:textSize="12sp"
-                                app:fontFamily="sans-serif-light"
-                                tools:text="Last Modified on 13th September 2019" />
-                    </LinearLayout>
+                    <TextView
+                            android:id="@+id/tv_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            app:fontFamily="sans-serif-light"
+                            tools:text="Last Modified on 13th September 2019" />
+
+                    <dev.pinaki.todoapp.ui.view.EllipsizingTextView
+                            android:id="@+id/tv_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:inputType="none"
+                            android:maxLines="2"
+                            android:textColor="#8b8b8b"
+                            android:textSize="12sp"
+                            android:visibility="gone"
+                            app:fontFamily="sans-serif-light"
+                            tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
+                            tools:visibility="visible" />
                 </LinearLayout>
             </LinearLayout>
-        </FrameLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:alpha=".50"
+                    android:background="?android:attr/listDivider" />
+
+        </LinearLayout>
     </FrameLayout>
 </layout>

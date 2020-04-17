@@ -203,6 +203,13 @@ class TodoListingAdapter(val application: Application) :
             } else {
                 hideDate()
             }
+
+            if (todoItem.description.isNullOrEmpty()) {
+                binding.tvContent.gone()
+            } else {
+                binding.tvContent.visible()
+                binding.tvContent.text = todoItem.description
+            }
         }
 
         fun setTitle(title: String) {

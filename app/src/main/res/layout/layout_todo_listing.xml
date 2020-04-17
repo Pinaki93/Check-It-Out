@@ -64,7 +64,10 @@
                 <dev.pinaki.todoapp.ui.view.AddTodoItemView
                         android:id="@+id/add_todo_item_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true" />
             </androidx.cardview.widget.CardView>
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

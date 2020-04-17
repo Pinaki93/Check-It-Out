@@ -167,7 +167,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
 
                 is Result.Success<Any> -> {
                     // success
-                    todoListingBinding.addTodoItemView.clearText()
+                    todoListingBinding.addTodoItemView.prepareForNewItem()
                     smoothScrollToTop()
                 }
             }
@@ -316,7 +316,13 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
         val (task, taskDescription) = todoListingBinding.addTodoItemView.getItemText()
 
         if (task.isNotEmpty())
-            todoViewModel.addTodo(TodoItem(title = task, done = false))
+            todoViewModel.addTodo(
+                TodoItem(
+                    title = task,
+                    done = false,
+                    description = if (taskDescription.isNotEmpty()) taskDescription else null
+                )
+            )
         else
             toast(getString(R.string.err_item_name_empty))
     }

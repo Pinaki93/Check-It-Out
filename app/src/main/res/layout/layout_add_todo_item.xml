@@ -9,13 +9,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#f4f4f4"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:paddingLeft="24dp"
-            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
             android:paddingRight="24dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="8dp">
 
         <EditText
                 android:id="@+id/et_todo_item"
@@ -25,6 +21,10 @@
                 android:hint="@string/msg_add_an_item"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
+                android:paddingLeft="8dp"
+                android:paddingTop="16dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
                 android:textColor="#2E2E2E"
                 android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -34,11 +34,11 @@
                 android:id="@+id/et_todo_item_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
                 android:hint="@string/msg_add_description"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
+                android:paddingLeft="8dp"
                 android:textColor="#8b8b8b"
                 android:textSize="14sp"
                 android:visibility="gone"
@@ -47,38 +47,41 @@
                 tools:visibility="visible" />
 
         <FrameLayout
+                android:id="@+id/fl_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_todo_item_description">
+                app:layout_constraintTop_toBottomOf="@+id/et_todo_item_description"
+                tools:visibility="visible">
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/cb_show_description"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|left"
-                    android:background="@drawable/checkbox_description"
-                    android:button="@null"
+                    android:layout_marginLeft="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:button="@drawable/checkbox_description"
                     android:checked="false"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
                     android:textOff=""
-                    android:textOn=""
-                    android:visibility="gone"
-                    tools:visibility="visible" />
+                    android:textOn="" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_add_todo_item"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|right"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
-                    android:src="@drawable/ic_done_orange_24dp"
-                    android:tint="@color/colorAccent"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
+                    android:text="Save"
+                    android:textColor="@color/colorAccent" />
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
