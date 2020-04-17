@@ -12,4 +12,5 @@
     <string name="msg_error_occurred">An error occurred. Please try again</string>
     <string name="err_item_name_empty">Item name can\'t be empty</string>
     <string name="msg_add_an_item">Add an item</string>
+    <string name="msg_add_description">Add description</string>
 </resources>

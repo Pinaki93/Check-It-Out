@@ -11,6 +11,8 @@ import android.util.TypedValue
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
+
 
 fun View.visible() {
     visibility = View.VISIBLE
@@ -158,4 +161,17 @@ fun Context.getWindowHeight(): Int {
     windowManager.defaultDisplay.getMetrics(displayMetrics)
 
     return displayMetrics.heightPixels
+}
+
+fun Context.showKeyboard(field: EditText) {
+    val inputMethodManager: InputMethodManager? =
+        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    inputMethodManager?.showSoftInput(field, 0)
+
+    field.requestFocus()
+}
+
+fun Fragment.showKeyboard(field: EditText) {
+    context?.showKeyboard(field)
 }

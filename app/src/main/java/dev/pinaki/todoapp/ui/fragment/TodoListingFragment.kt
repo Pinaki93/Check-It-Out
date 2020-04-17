@@ -2,8 +2,10 @@ package dev.pinaki.todoapp.ui.fragment
 
 import android.os.Build
 import android.os.Bundle
-import android.view.*
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -29,8 +31,8 @@ import dev.pinaki.todoapp.viewmodel.TodoViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickListener,
-    TextView.OnEditorActionListener {
+class TodoListingFragment : Fragment(), OnItemInteractionListener,
+    dev.pinaki.todoapp.ui.view.OnItemInteractionListener {
 
     private lateinit var todoViewModel: TodoViewModel
 
@@ -77,7 +79,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
     }
 
     private val onKeyboardStateChange = { open: Boolean ->
-        prepareAddTodoSection(open && todoListingBinding.etTodoItem.hasFocus())
+        prepareAddTodoSection(open)
     }
 
     private val smoothScroller: LinearSmoothScroller by lazy {
@@ -165,7 +167,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
 
                 is Result.Success<Any> -> {
                     // success
-                    todoListingBinding.etTodoItem.text.clear()
+                    todoListingBinding.addTodoItemView.clearText()
                     smoothScrollToTop()
                 }
             }
@@ -203,23 +205,6 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
     /////////////////////////////////////////////////////////////////////////////////////
     // Callbacks
     /////////////////////////////////////////////////////////////////////////////////////
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.btn_add_todo_item -> {
-                addTodoItem()
-            }
-        }
-    }
-
-    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        if (v?.equals(todoListingBinding.etTodoItem) == true) {
-            addTodoItem()
-            return true
-        }
-
-        return false
-    }
-
     override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {
         adapter.moveItem(initialPosition, finalPosition)
     }
@@ -286,25 +271,11 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
 
         itemTouchHelper.attachToRecyclerView(todoListingBinding.rvItems)
 
-        todoListingBinding.btnAddTodoItem.setOnClickListener(this)
-        todoListingBinding.etTodoItem.setOnEditorActionListener(this)
+        todoListingBinding.addTodoItemView.listener = this
     }
 
     private fun prepareAddTodoSection(showOptions: Boolean) {
-        if (showOptions) {
-            todoListingBinding.btnAddTodoItem.visible()
-        } else {
-            todoListingBinding.btnAddTodoItem.gone()
-        }
-    }
-
-    private fun addTodoItem() {
-        val task = todoListingBinding.etTodoItem.text.toString()
-
-        if (task.isNotEmpty())
-            todoViewModel.addTodo(TodoItem(title = task, done = false))
-        else
-            toast(getString(R.string.err_item_name_empty))
+        todoListingBinding.addTodoItemView.showCollapsedView(!showOptions)
     }
 
     private fun showLoaderView(shouldShow: Boolean) {
@@ -339,5 +310,14 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener, View.OnClickL
             .setAction("Undo") {
                 todoViewModel.addTodo(data, false)
             }.show()
+    }
+
+    override fun onAddTodoItem() {
+        val (task, taskDescription) = todoListingBinding.addTodoItemView.getItemText()
+
+        if (task.isNotEmpty())
+            todoViewModel.addTodo(TodoItem(title = task, done = false))
+        else
+            toast(getString(R.string.err_item_name_empty))
     }
 }
