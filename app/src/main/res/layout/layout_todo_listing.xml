@@ -44,14 +44,16 @@
         <FrameLayout
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true">
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_items"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
-                    android:paddingBottom="80dp" />
+                    android:paddingBottom="120dp" />
 
             <androidx.cardview.widget.CardView
                     android:id="@+id/cv_add_item"

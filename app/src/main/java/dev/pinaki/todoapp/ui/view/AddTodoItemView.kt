@@ -47,43 +47,6 @@ class AddTodoItemView : ConstraintLayout, CompoundButton.OnCheckedChangeListener
         binding.etTodoItemDescription.setOnEditorActionListener(this)
     }
 
-    fun showCollapsedView(shouldShow: Boolean) {
-        if (shouldShow) {
-            binding.btnAddTodoItem.gone()
-            binding.cbShowDescription.gone()
-            binding.etTodoItemDescription.gone()
-            binding.flOptions.gone()
-        } else {
-            binding.btnAddTodoItem.visible()
-            binding.cbShowDescription.visible()
-            binding.flOptions.visible()
-
-            if (binding.cbShowDescription.isChecked)
-                binding.etTodoItemDescription.visible()
-            else
-                binding.etTodoItemDescription.gone()
-        }
-    }
-
-    private fun showDescription(shouldShow: Boolean) {
-        if (shouldShow) {
-            binding.etTodoItemDescription.visible()
-            context.showKeyboard(binding.etTodoItemDescription)
-        } else {
-            binding.etTodoItemDescription.gone()
-            context.showKeyboard(binding.etTodoItem)
-        }
-    }
-
-    fun getItemText(): Pair<String, String> =
-        Pair(binding.etTodoItem.text.toString(), binding.etTodoItemDescription.text.toString())
-
-    fun prepareForNewItem() {
-        binding.etTodoItem.text.clear()
-        binding.etTodoItemDescription.text.clear()
-        context.showKeyboard(binding.etTodoItem)
-    }
-
     override fun onClick(v: View?) {
         if (v?.id == R.id.btn_add_todo_item) {
             listener?.onAddTodoItem()
@@ -107,6 +70,46 @@ class AddTodoItemView : ConstraintLayout, CompoundButton.OnCheckedChangeListener
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         if (buttonView?.id == R.id.cb_show_description) {
             showDescription(isChecked)
+        }
+    }
+
+    fun showCollapsedView(shouldShow: Boolean) {
+        if (shouldShow) {
+            binding.btnAddTodoItem.gone()
+            binding.cbShowDescription.gone()
+            binding.etTodoItemDescription.gone()
+            binding.flOptions.gone()
+        } else {
+            binding.btnAddTodoItem.visible()
+            binding.cbShowDescription.visible()
+            binding.flOptions.visible()
+
+            if (binding.cbShowDescription.isChecked)
+                binding.etTodoItemDescription.visible()
+            else
+                binding.etTodoItemDescription.gone()
+        }
+    }
+
+    fun getItemText(): Pair<String, String> =
+        Pair(binding.etTodoItem.text.toString(), binding.etTodoItemDescription.text.toString())
+
+    fun prepareForNewItem() {
+        binding.etTodoItem.text.clear()
+        binding.etTodoItemDescription.text.clear()
+        context.showKeyboard(binding.etTodoItem)
+    }
+
+    fun anyFieldHasFocus() =
+        binding.etTodoItem.hasFocus() || binding.etTodoItemDescription.hasFocus()
+
+    private fun showDescription(shouldShow: Boolean) {
+        if (shouldShow) {
+            binding.etTodoItemDescription.visible()
+            context.showKeyboard(binding.etTodoItemDescription)
+        } else {
+            binding.etTodoItemDescription.gone()
+            context.showKeyboard(binding.etTodoItem)
         }
     }
 }

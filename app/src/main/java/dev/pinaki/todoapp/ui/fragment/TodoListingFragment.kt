@@ -79,7 +79,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
     }
 
     private val onKeyboardStateChange = { open: Boolean ->
-        prepareAddTodoSection(open)
+        prepareAddTodoSection(open && todoListingBinding.addTodoItemView.anyFieldHasFocus())
     }
 
     private val smoothScroller: LinearSmoothScroller by lazy {

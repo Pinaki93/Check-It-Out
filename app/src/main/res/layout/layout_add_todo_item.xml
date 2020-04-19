@@ -9,6 +9,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#f4f4f4"
+            android:descendantFocusability="beforeDescendants"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:paddingLeft="16dp"
             android:paddingRight="24dp"
             android:paddingBottom="8dp">
