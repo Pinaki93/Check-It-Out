@@ -69,8 +69,8 @@ data class ContentItem(val data: TodoItem) : TodoViewItem() {
 class TodoListingAdapter(val application: Application) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    var listener: Listener? = null
     var onItemClick: ((TodoItem) -> Unit)? = null
-    var onItemDelete: ((TodoItem) -> Unit)? = null
 
     var items: MutableList<TodoViewItem> = ArrayList()
         set(value) {
@@ -182,13 +182,13 @@ class TodoListingAdapter(val application: Application) :
         init {
             binding.todoItemContainer.setOnClickListener {
                 if (items[adapterPosition] is ContentItem) {
-                    onItemClick?.invoke((items[adapterPosition] as ContentItem).data.copy())
+                    listener?.onItemClicked((items[adapterPosition] as ContentItem).data.copy())
                 }
             }
 
             binding.cbTodoDone.setOnClickListener {
                 if (items[adapterPosition] is ContentItem) {
-                    onItemClick?.invoke((items[adapterPosition] as ContentItem).data.copy())
+                    listener?.onItemChecked((items[adapterPosition] as ContentItem).data.copy())
                 }
             }
         }
@@ -240,6 +240,15 @@ class TodoListingAdapter(val application: Application) :
 
         fun getContentView() = binding.todoItemContainerParent
     }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Callback
+//////////////////////////////////////////////////////////////////////////////////////////////
+interface Listener {
+    fun onItemChecked(item: TodoItem)
+
+    fun onItemClicked(item: TodoItem)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////

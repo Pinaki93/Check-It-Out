@@ -8,4 +8,5 @@
     <color name="deleteColor">#D1495B</color>
     <color name="favColor">#F4E285</color>
     <color name="shimmer_base_color">#dddddd</color>
+    <color name="bg_main">#FDFFFC</color>
 </resources>

@@ -114,11 +114,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".50"
-                    android:background="?android:attr/listDivider" />
+            <include layout="@layout/item_divider" />
 
         </LinearLayout>
     </FrameLayout>

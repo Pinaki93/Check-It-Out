@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="AddEditTodoBinding" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_main">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/cb_todo_done"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="16dp"
+                        android:button="@drawable/checked"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_todo_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/msg_add_an_item"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLines="5"
+                        android:scrollbars="vertical"
+                        tools:text="Collect Laundry"
+                        android:textColor="#2E2E2E"
+                        android:textSize="22sp"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <include
+                    android:id="@+id/separator_1"
+                    layout="@layout/item_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintTop_toBottomOf="@+id/et_todo_item" />
+
+            <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/separator_1">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_todo_item_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/msg_add_description"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:paddingLeft="24dp"
+                        android:paddingTop="8dp"
+                        android:paddingRight="24dp"
+                        android:paddingBottom="64dp"
+                        tools:text="@string/ipsum_long"
+                        android:textColor="#8b8b8b"
+                        android:textSize="16sp" />
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/bottom_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:backgroundTint="@color/white"
+                app:fabAlignmentMode="center"
+                app:navigationIcon="@drawable/ic_arrow_back_black_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_done_orange_24dp"
+                app:backgroundTint="@color/colorAccent"
+                app:layout_anchor="@id/bottom_app_bar"
+                app:tint="@color/white" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

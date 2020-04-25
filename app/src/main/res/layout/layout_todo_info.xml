@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class="TodoInfoBinding" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <TextView
+                android:id="@+id/tv_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_information"
+                android:textColor="#4a4a4a"
+                android:textSize="14sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/tv_date_added"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_information"
+                tools:text="@string/msg_added_on" />
+
+        <TextView
+                android:id="@+id/tv_date_modified"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_date_added"
+                tools:text="@string/msg_modified_on" />
+
+        <TextView
+                android:id="@+id/tv_date_completed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_date_modified"
+                tools:text="@string/msg_completed_on" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

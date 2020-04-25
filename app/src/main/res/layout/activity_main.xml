@@ -8,7 +8,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FDFFFC"
+            android:background="@color/bg_main"
             tools:context=".ui.activity.MainActivity">
 
         <LinearLayout
@@ -21,7 +21,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:fontFamily="sans-serif-medium"
+                    app:fontFamily="sans-serif-medium"
                     android:gravity="center"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"

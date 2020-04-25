@@ -1,11 +1,9 @@
 package dev.pinaki.todoapp.ui.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,7 +19,9 @@ import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.TodoListingBinding
 import dev.pinaki.todoapp.ds.Result
+import dev.pinaki.todoapp.ui.activity.AddEditTodoActivity
 import dev.pinaki.todoapp.ui.adapter.ContentItem
+import dev.pinaki.todoapp.ui.adapter.Listener
 import dev.pinaki.todoapp.ui.adapter.TodoListingAdapter
 import dev.pinaki.todoapp.ui.adapter.TodoViewItem
 import dev.pinaki.todoapp.ui.adapter.swipeanddrag.OnItemInteractionListener
@@ -31,8 +31,9 @@ import dev.pinaki.todoapp.viewmodel.TodoViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class TodoListingFragment : Fragment(), OnItemInteractionListener,
-    dev.pinaki.todoapp.ui.view.OnItemInteractionListener {
+    dev.pinaki.todoapp.ui.view.OnItemInteractionListener, Listener {
 
     private lateinit var todoViewModel: TodoViewModel
 
@@ -43,48 +44,23 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
 
     private var initialListState: MutableList<TodoViewItem> = ArrayList()
 
-    private val onListItemClickListener: (TodoItem) -> Unit = {
-        it.done = !it.done
-
-        // update the completion date
-        if (it.done) {
-            it.dateCompeted = Date()
-        } else {
-            it.dateCompeted = null
-        }
-
-        todoViewModel.saveTodoItem(it)
-    }
-
-    private val onListItemDeleteClickListener: (TodoItem) -> Unit = {
-        todoViewModel.deleteItem(it)
-    }
-
-    private val keyboardOpenCloseListener = object : ViewTreeObserver.OnGlobalLayoutListener {
-        private var lastState: Boolean = activity?.isKeyboardOpen() ?: false
-
-        override fun onGlobalLayout() {
-            val isOpen = activity?.isKeyboardOpen() ?: false
-            if (isOpen == lastState) {
-                return
-            } else {
-                lastState = isOpen
-                onKeyboardStateChange(isOpen)
-            }
-        }
-    }
-
     private val linearLayoutManager: LinearLayoutManager by lazy {
         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    private val onKeyboardStateChange = { open: Boolean ->
+    private val onKeyboardStateChangeListener = { open: Boolean ->
         prepareAddTodoSection(open && todoListingBinding.addTodoItemView.anyFieldHasFocus())
     }
 
     private val smoothScroller: LinearSmoothScroller by lazy {
         object : LinearSmoothScroller(context!!) {
             override fun getVerticalSnapPreference() = SNAP_TO_START
+        }
+    }
+
+    private val keyboardUtil: KeyboardUtil by lazy {
+        KeyboardUtil(activity!!).apply {
+            onKeyboardStateChangeListener = this@TodoListingFragment.onKeyboardStateChangeListener
         }
     }
 
@@ -188,18 +164,13 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
 
     override fun onResume() {
         super.onResume()
-        activity!!.getRootView().viewTreeObserver.addOnGlobalLayoutListener(
-            keyboardOpenCloseListener
-        )
+        keyboardUtil.listenToKeyboardChanges(true)
+        todoViewModel.loadTodos()
     }
 
     override fun onPause() {
         super.onPause()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            activity!!.getRootView().viewTreeObserver.removeOnGlobalLayoutListener(
-                keyboardOpenCloseListener
-            )
-        }
+        keyboardUtil.listenToKeyboardChanges(false)
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
@@ -260,8 +231,7 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
 
         todoListingBinding.rvItems.isNestedScrollingEnabled = false
 
-        adapter.onItemClick = onListItemClickListener
-        adapter.onItemDelete = onListItemDeleteClickListener
+        adapter.listener = this
 
         val itemTouchHelper = ItemTouchHelper(
             TodoItemRecyclerViewCallback(
@@ -325,5 +295,22 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
             )
         else
             toast(getString(R.string.err_item_name_empty))
+    }
+
+    override fun onItemChecked(item: TodoItem) {
+        item.done = !item.done
+
+        // update the completion date
+        if (item.done) {
+            item.dateCompeted = Date()
+        } else {
+            item.dateCompeted = null
+        }
+
+        todoViewModel.saveTodoItem(item)
+    }
+
+    override fun onItemClicked(item: TodoItem) {
+        AddEditTodoActivity.startActivity(this, item)
     }
 }

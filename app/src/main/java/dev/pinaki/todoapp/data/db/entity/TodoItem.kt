@@ -1,12 +1,15 @@
 package dev.pinaki.todoapp.data.db.entity
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import dev.pinaki.todoapp.ds.ComparableItem
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Entity(tableName = "todo_item")
+@Parcelize
 data class TodoItem(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
@@ -31,7 +34,7 @@ data class TodoItem(
 
     @ColumnInfo(name = "item_order")
     var itemOrder: Double = 0.0
-) : ComparableItem<TodoItem> {
+) : ComparableItem<TodoItem>, Parcelable {
     override fun isItemSame(other: TodoItem) = this.id == other.id
 
     /**

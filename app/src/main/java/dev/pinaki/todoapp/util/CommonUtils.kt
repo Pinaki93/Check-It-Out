@@ -167,7 +167,7 @@ fun Context.showKeyboard(field: EditText) {
     val inputMethodManager: InputMethodManager? =
         getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-    inputMethodManager?.showSoftInput(field, 0)
+    inputMethodManager?.showSoftInput(field, InputMethodManager.SHOW_IMPLICIT)
 
     field.requestFocus()
 }
@@ -175,3 +175,5 @@ fun Context.showKeyboard(field: EditText) {
 fun Fragment.showKeyboard(field: EditText) {
     context?.showKeyboard(field)
 }
+
+fun Activity?.canShowDialog() = this != null && !this.isFinishing

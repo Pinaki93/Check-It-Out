@@ -9,6 +9,7 @@ import dev.pinaki.todoapp.ds.Event
 import dev.pinaki.todoapp.ds.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class TodoViewModel(
     application: Application,
@@ -113,6 +114,42 @@ class TodoViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             action()
         }
+    }
+
+    fun addOrSaveTodo(item: TodoItem?, task: String, taskDescription: String, taskDone: Boolean) {
+        if (item == null) {
+            addTodo(
+                TodoItem(
+                    title = task,
+                    done = taskDone,
+                    description = if (taskDescription.isNotEmpty()) taskDescription else null,
+                    dateCompeted = if (taskDone) Date() else null
+                )
+            )
+        } else {
+            saveTodoItem(item.apply {
+                title = task
+                description = taskDescription
+                done = taskDone
+
+                if (done) {
+                    dateCompeted = Date()
+                }
+            })
+        }
+    }
+
+    fun userEditedAnything(
+        item: TodoItem?,
+        task: String,
+        taskDescription: String?,
+        taskDone: Boolean
+    ): Boolean {
+        val safeItem = item ?: return true
+
+        return safeItem.title != task
+                || safeItem.description != taskDescription
+                || safeItem.done != taskDone
     }
 
     companion object {
