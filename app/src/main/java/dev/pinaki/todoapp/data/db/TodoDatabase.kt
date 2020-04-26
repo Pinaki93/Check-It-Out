@@ -5,13 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import dev.pinaki.todoapp.data.db.TodoDatabase.Companion.DB_VERSION
 import dev.pinaki.todoapp.data.db.converter.ComplexDataConverter
 import dev.pinaki.todoapp.data.db.dao.TodoDao
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.data.db.entity.TodoList
+import dev.pinaki.todoapp.data.db.migration.migration1to2
+import dev.pinaki.todoapp.data.db.migration.migration2to3
+import dev.pinaki.todoapp.data.db.migration.migration3to4
 
 @Database(version = DB_VERSION, entities = [TodoItem::class, TodoList::class])
 @TypeConverters(ComplexDataConverter::class)
@@ -49,25 +50,3 @@ abstract class TodoDatabase : RoomDatabase() {
 }
 
 //Database Migrations
-val migration1to2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE todo_item add COLUMN item_order REAL NOT NULL DEFAULT 0")
-        database.execSQL("UPDATE todo_item set item_order=(id+1)")
-    }
-}
-
-val migration2to3 = object : Migration(2, 3) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE todo_item add COLUMN item_description TEXT DEFAULT NULL")
-    }
-}
-
-val migration3to4 = object : Migration(3, 4) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("CREATE TABLE IF NOT EXISTS `todo_list` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `item_description` TEXT)")
-        database.execSQL("INSERT INTO `todo_list` (`id`,`title`) values (1,'My List')")
-
-        database.execSQL("ALTER TABLE todo_item add COLUMN list_ref_id INTEGER NOT NULL DEFAULT 0")
-        database.execSQL("UPDATE todo_item set list_ref_id=1")
-    }
-}
