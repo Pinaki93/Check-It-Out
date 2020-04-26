@@ -20,5 +20,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.AddEditTodoActivity" />
+        <activity android:name=".util.dbbrowser.DatabaseBrowserActivity" />
     </application>
 </manifest>
