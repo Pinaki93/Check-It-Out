@@ -19,6 +19,13 @@ android {
         versionCode Integer.parseInt(buildConfig.appVersion)
         versionName "${buildConfig.appVersion}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+                arg("room.incremental", "true")
+            }
+        }
     }
 
     buildTypes {

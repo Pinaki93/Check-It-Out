@@ -290,7 +290,8 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
                 TodoItem(
                     title = task,
                     done = false,
-                    description = if (taskDescription.isNotEmpty()) taskDescription else null
+                    description = if (taskDescription.isNotEmpty()) taskDescription else null,
+                    listRefId = 1 /*TODO: this is DANGEROUS. Fix this fast*/
                 )
             )
         else

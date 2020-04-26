@@ -123,7 +123,8 @@ class TodoViewModel(
                     title = task,
                     done = taskDone,
                     description = if (taskDescription.isNotEmpty()) taskDescription else null,
-                    dateCompeted = if (taskDone) Date() else null
+                    dateCompeted = if (taskDone) Date() else null,
+                    listRefId = 1  /*TODO: this is DANGEROUS. Fix this fast*/
                 )
             )
         } else {

@@ -11,8 +11,9 @@ import dev.pinaki.todoapp.data.db.TodoDatabase.Companion.DB_VERSION
 import dev.pinaki.todoapp.data.db.converter.ComplexDataConverter
 import dev.pinaki.todoapp.data.db.dao.TodoDao
 import dev.pinaki.todoapp.data.db.entity.TodoItem
+import dev.pinaki.todoapp.data.db.entity.TodoList
 
-@Database(version = DB_VERSION, entities = [TodoItem::class])
+@Database(version = DB_VERSION, entities = [TodoItem::class, TodoList::class])
 @TypeConverters(ComplexDataConverter::class)
 abstract class TodoDatabase : RoomDatabase() {
 
@@ -21,7 +22,7 @@ abstract class TodoDatabase : RoomDatabase() {
     companion object {
 
         //TODO: move these constants to build config
-        const val DB_VERSION = 3
+        const val DB_VERSION = 4
         private const val DB_NAME = "todo_db"
 
         private lateinit var instance: TodoDatabase
@@ -36,7 +37,7 @@ abstract class TodoDatabase : RoomDatabase() {
                                 TodoDatabase::class.java,
                                 DB_NAME
                             )
-                            .addMigrations(migration1to2, migration2to3)
+                            .addMigrations(migration1to2, migration2to3, migration3to4)
                             .build()
                     }
                 }
@@ -58,5 +59,15 @@ val migration1to2 = object : Migration(1, 2) {
 val migration2to3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE todo_item add COLUMN item_description TEXT DEFAULT NULL")
+    }
+}
+
+val migration3to4 = object : Migration(3, 4) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE IF NOT EXISTS `todo_list` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `item_description` TEXT)")
+        database.execSQL("INSERT INTO `todo_list` (`id`,`title`) values (1,'My List')")
+
+        database.execSQL("ALTER TABLE todo_item add COLUMN list_ref_id INTEGER DEFAULT 0")
+        database.execSQL("UPDATE todo_item set list_ref_id=1")
     }
 }

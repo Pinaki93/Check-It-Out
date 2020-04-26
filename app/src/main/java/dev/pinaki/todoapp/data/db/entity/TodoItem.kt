@@ -33,7 +33,11 @@ data class TodoItem(
     var dateCompeted: Date? = null,
 
     @ColumnInfo(name = "item_order")
-    var itemOrder: Double = 0.0
+    var itemOrder: Double = 0.0,
+
+    @ColumnInfo(name = "list_ref_id")
+    var listRefId: Int
+
 ) : ComparableItem<TodoItem>, Parcelable {
     override fun isItemSame(other: TodoItem) = this.id == other.id
 
