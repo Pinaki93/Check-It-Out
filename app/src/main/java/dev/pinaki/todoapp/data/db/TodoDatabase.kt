@@ -67,7 +67,7 @@ val migration3to4 = object : Migration(3, 4) {
         database.execSQL("CREATE TABLE IF NOT EXISTS `todo_list` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `item_description` TEXT)")
         database.execSQL("INSERT INTO `todo_list` (`id`,`title`) values (1,'My List')")
 
-        database.execSQL("ALTER TABLE todo_item add COLUMN list_ref_id INTEGER DEFAULT 0")
+        database.execSQL("ALTER TABLE todo_item add COLUMN list_ref_id INTEGER NOT NULL DEFAULT 0")
         database.execSQL("UPDATE todo_item set list_ref_id=1")
     }
 }
