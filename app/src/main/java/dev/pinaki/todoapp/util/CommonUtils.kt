@@ -16,10 +16,14 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.ui.features.todos.adapter.ContentItem
 import dev.pinaki.todoapp.ui.features.todos.adapter.HeaderItem
 import dev.pinaki.todoapp.ui.features.todos.adapter.TodoViewItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -177,3 +181,9 @@ fun Fragment.showKeyboard(field: EditText) {
 }
 
 fun Activity?.canShowDialog() = this != null && !this.isFinishing
+
+inline fun ViewModel.launchInIOScope(crossinline action: suspend () -> Unit) {
+    viewModelScope.launch(Dispatchers.IO) {
+        action()
+    }
+}

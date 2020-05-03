@@ -4,6 +4,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!--In case we have a bottom sheet later where the bottom sheet should not float over
+        the keyboard, remove this from the base theme-->
+        <item name="bottomSheetDialogTheme">@style/AppTheme.FloatingBottomSheetStyle</item>
     </style>
 
     <style name="AppTheme.BaseBottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">

@@ -1,20 +1,18 @@
 package dev.pinaki.todoapp.ui.features.addtodo
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.databinding.TodoInfoBinding
+import dev.pinaki.todoapp.ui.base.bottomsheet.CurvedBottomSheetDialogFragment
 import dev.pinaki.todoapp.util.getAsDisplayString
 import dev.pinaki.todoapp.util.gone
 import java.util.*
 
-class TodoInfoBottomSheet : BottomSheetDialogFragment() {
+class TodoInfoBottomSheet : CurvedBottomSheetDialogFragment() {
 
     private lateinit var dateCreated: Date
     private lateinit var dateModified: Date
@@ -30,17 +28,6 @@ class TodoInfoBottomSheet : BottomSheetDialogFragment() {
             dateModified = getSerializable(ARG_DATE_MODIFIED) as Date
             dateCompleted = getSerializable(ARG_DATE_COMPLETED) as Date?
         }
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setOnShowListener {
-            val contentView =
-                dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-            contentView.setBackgroundResource(R.drawable.bg_top_rouned_corners_16dp)
-        }
-
-        return dialog
     }
 
     override fun onCreateView(

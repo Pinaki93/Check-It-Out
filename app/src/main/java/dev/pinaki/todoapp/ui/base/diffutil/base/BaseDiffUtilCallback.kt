@@ -1,4 +1,4 @@
-package dev.pinaki.todoapp.ui.diffutil.base
+package dev.pinaki.todoapp.ui.base.diffutil.base
 
 import androidx.recyclerview.widget.DiffUtil
 import dev.pinaki.todoapp.ds.ComparableItem

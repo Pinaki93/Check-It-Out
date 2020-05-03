@@ -26,4 +26,10 @@
     <string name="msg_completed_on">Completed on %1$s</string>
     <string name="title_information">Information:</string>
     <string name="cancel">Cancel</string>
+    <string name="add_list">Add List</string>
+    <string name="list_name">List Name</string>
+    <string name="add">Add</string>
+    <string name="err_list_name_empty">List name can\'t be empty</string>
+    <string name="some_error_occurred">Some Error Occurred</string>
+    <string name="msg_todo_lists_empty">No lists added. To start, click on the \"Add List\" option below</string>
 </resources>

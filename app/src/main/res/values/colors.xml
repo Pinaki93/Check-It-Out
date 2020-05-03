@@ -9,4 +9,7 @@
     <color name="favColor">#F4E285</color>
     <color name="shimmer_base_color">#dddddd</color>
     <color name="bg_main">#FDFFFC</color>
+    <color name="bottom_option_bg_normal">#f4f4f4</color>
+    <color name="bottom_option_bg_clicked">#dcdcdc</color>
+    <color name="crayola">#f3c98b</color>
 </resources>

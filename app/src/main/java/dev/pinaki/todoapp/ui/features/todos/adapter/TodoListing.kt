@@ -14,8 +14,7 @@ import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.TodoHeaderBinding
 import dev.pinaki.todoapp.databinding.TodoItemBinding
 import dev.pinaki.todoapp.ds.ComparableItem
-import dev.pinaki.todoapp.ui.diffutil.TodoViewItemDiffUtilCallback
-import dev.pinaki.todoapp.ui.diffutil.base.BaseDiffUtilCallback
+import dev.pinaki.todoapp.ui.base.diffutil.base.BaseDiffUtilCallback
 import dev.pinaki.todoapp.util.*
 import java.util.*
 import kotlin.collections.ArrayList

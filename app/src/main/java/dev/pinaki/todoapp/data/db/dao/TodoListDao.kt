@@ -1,9 +1,6 @@
 package dev.pinaki.todoapp.data.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import dev.pinaki.todoapp.data.db.entity.TodoList
 import dev.pinaki.todoapp.data.db.entity.TodoListWithItems
 
@@ -13,6 +10,7 @@ interface TodoListDao {
     @Query("select * from todo_list")
     suspend fun getAll(): List<TodoList>
 
+    @Transaction
     @Query("select * from todo_list where id=:id")
     suspend fun getTodosForList(id: String): List<TodoListWithItems>
 

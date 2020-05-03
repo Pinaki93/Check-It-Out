@@ -225,10 +225,12 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
     /////////////////////////////////////////////////////////////////////////////////////
     private fun initUI() {
         adapter = TodoListingAdapter(activity?.application!!)
-        todoListingBinding.rvItems.adapter = adapter
-        todoListingBinding.rvItems.layoutManager = linearLayoutManager
+        todoListingBinding.rvItems.run {
+            adapter = adapter
+            layoutManager = linearLayoutManager
 
-        todoListingBinding.rvItems.isNestedScrollingEnabled = false
+            isNestedScrollingEnabled = false
+        }
 
         adapter.listener = this
 

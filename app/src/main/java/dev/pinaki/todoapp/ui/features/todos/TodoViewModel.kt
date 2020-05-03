@@ -7,8 +7,7 @@ import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.ds.Event
 import dev.pinaki.todoapp.ds.Result
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import dev.pinaki.todoapp.util.launchInIOScope
 import java.util.*
 
 class TodoViewModel(
@@ -107,12 +106,6 @@ class TodoViewModel(
             } finally {
                 loadTodos()
             }
-        }
-    }
-
-    private inline fun launchInIOScope(crossinline action: suspend () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            action()
         }
     }
 
