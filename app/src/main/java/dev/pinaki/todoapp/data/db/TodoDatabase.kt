@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import dev.pinaki.todoapp.data.db.TodoDatabase.Companion.DB_VERSION
 import dev.pinaki.todoapp.data.db.converter.ComplexDataConverter
 import dev.pinaki.todoapp.data.db.dao.TodoDao
+import dev.pinaki.todoapp.data.db.dao.TodoListDao
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.data.db.entity.TodoList
 import dev.pinaki.todoapp.data.db.migration.migration1to2
@@ -19,6 +20,8 @@ import dev.pinaki.todoapp.data.db.migration.migration3to4
 abstract class TodoDatabase : RoomDatabase() {
 
     abstract fun todoDao(): TodoDao
+
+    abstract fun todoListDao(): TodoListDao
 
     companion object {
 
@@ -48,5 +51,3 @@ abstract class TodoDatabase : RoomDatabase() {
         }
     }
 }
-
-//Database Migrations

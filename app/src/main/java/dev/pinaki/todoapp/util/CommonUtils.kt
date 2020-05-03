@@ -17,9 +17,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import dev.pinaki.todoapp.data.db.entity.TodoItem
-import dev.pinaki.todoapp.ui.adapter.ContentItem
-import dev.pinaki.todoapp.ui.adapter.HeaderItem
-import dev.pinaki.todoapp.ui.adapter.TodoViewItem
+import dev.pinaki.todoapp.ui.features.todos.adapter.ContentItem
+import dev.pinaki.todoapp.ui.features.todos.adapter.HeaderItem
+import dev.pinaki.todoapp.ui.features.todos.adapter.TodoViewItem
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList

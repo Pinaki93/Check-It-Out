@@ -37,7 +37,6 @@ data class TodoItem(
 
     @ColumnInfo(name = "list_ref_id")
     var listRefId: Int = 0
-
 ) : ComparableItem<TodoItem>, Parcelable {
     override fun isItemSame(other: TodoItem) = this.id == other.id
 

@@ -1,9 +1,9 @@
-package dev.pinaki.todoapp.ui.adapter.diffutil.base
+package dev.pinaki.todoapp.ui.diffutil.base
 
 import androidx.recyclerview.widget.DiffUtil
 import dev.pinaki.todoapp.ds.ComparableItem
 
-abstract class BaseDiffUtilCallback<T : ComparableItem<T>>(
+class BaseDiffUtilCallback<T : ComparableItem<T>>(
     private val oldList: List<T>,
     private val newList: List<T>
 ) : DiffUtil.Callback() {

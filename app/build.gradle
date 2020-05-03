@@ -66,6 +66,8 @@ dependencies {
 
     // Room and room annotation processor
     implementation "androidx.room:room-runtime:$room_version"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     kapt "androidx.room:room-compiler:$room_version"
 
     // Room x Coroutine x Ktx

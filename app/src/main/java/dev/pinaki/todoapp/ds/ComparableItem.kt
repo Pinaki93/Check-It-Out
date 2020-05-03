@@ -2,7 +2,7 @@ package dev.pinaki.todoapp.ds
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import dev.pinaki.todoapp.ui.adapter.diffutil.base.BaseDiffUtilCallback
+import dev.pinaki.todoapp.ui.diffutil.base.BaseDiffUtilCallback
 
 /**
  * A Util interface to let the comparison logic required
