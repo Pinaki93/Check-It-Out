@@ -10,12 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.data.TodoListRepository
-import dev.pinaki.todoapp.data.db.entity.TodoList
 import dev.pinaki.todoapp.databinding.AllListBinding
-import dev.pinaki.todoapp.ds.Result
-import dev.pinaki.todoapp.util.gone
 import dev.pinaki.todoapp.util.toast
-import dev.pinaki.todoapp.util.visible
 
 class AllListsFragment : Fragment(), AddTodoListBottomSheetDialogFragment.Listener {
 
@@ -33,13 +29,19 @@ class AllListsFragment : Fragment(), AddTodoListBottomSheetDialogFragment.Listen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel =
+            AllListsViewModel.getInstance(this, TodoListRepository(context!!.applicationContext))
+
         initUI()
         initViewModel()
-        viewModel.loadTodoLists()
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
     }
 
     private fun initUI() {
-        todoListAdapter = TodoListAdapter()
+        todoListAdapter = TodoListAdapter(viewModel)
 
         binding.rvTodoLists.run {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -55,44 +57,9 @@ class AllListsFragment : Fragment(), AddTodoListBottomSheetDialogFragment.Listen
     }
 
     private fun initViewModel() {
-        viewModel =
-            AllListsViewModel.getInstance(this, TodoListRepository(context!!.applicationContext))
-
-        viewModel.lists.observe(this, Observer {
-            if (it.hasBeenHandled) return@Observer
-
-            it.getContentIfNotHandled()?.run {
-                when (this) {
-                    is Result.Loading -> {
-                        // TODO: show shimmer layout
-                    }
-
-                    is Result.Success -> {
-                        refreshList(data)
-                    }
-
-                    is Result.Error -> {
-                        toast(getString(R.string.some_error_occurred))
-                    }
-                }
-            }
+        viewModel.toast.observe(this, Observer {
+            toast(getString(it))
         })
-    }
-
-    private fun refreshList(list: List<TodoList>?) {
-        if (list == null || list.isEmpty()) {
-            showEmptyView(true)
-        } else {
-            showEmptyView(false)
-            todoListAdapter.items = list
-        }
-    }
-
-    private fun showEmptyView(shouldShow: Boolean) {
-        if (shouldShow)
-            binding.layoutEmptyList.root.visible()
-        else
-            binding.layoutEmptyList.root.gone()
     }
 
     companion object {

@@ -10,6 +10,7 @@ class TodoRepository(context: Context) {
 
     private val db = TodoDatabase.getInstance(context)
     private val todoDao = db.todoDao()
+    private val todoListDao = db.todoListDao()
 
     suspend fun getAll() = todoDao.getAll().sortedBy {
         it.done

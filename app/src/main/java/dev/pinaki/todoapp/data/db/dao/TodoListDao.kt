@@ -1,5 +1,6 @@
 package dev.pinaki.todoapp.data.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import dev.pinaki.todoapp.data.db.entity.TodoList
 import dev.pinaki.todoapp.data.db.entity.TodoListWithItems
@@ -22,4 +23,7 @@ interface TodoListDao {
 
     @Delete
     suspend fun deleteTodoList(list: TodoList)
+
+    @Query("select * from todo_list")
+    fun observeAllTodoList(): LiveData<List<TodoList>>
 }

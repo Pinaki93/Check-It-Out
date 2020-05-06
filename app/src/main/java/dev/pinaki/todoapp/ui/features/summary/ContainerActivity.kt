@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.ui.features.todolists.AllListsFragment
 
-class SummaryActivity : AppCompatActivity() {
+class ContainerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

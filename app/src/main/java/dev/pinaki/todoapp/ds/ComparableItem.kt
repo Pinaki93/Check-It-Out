@@ -2,7 +2,7 @@ package dev.pinaki.todoapp.ds
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import dev.pinaki.todoapp.ui.base.diffutil.base.BaseDiffUtilCallback
+import dev.pinaki.todoapp.ui.base.diffutil.base.DeprecatedBaseDiffUtilCallback
 
 /**
  * A Util interface to let the comparison logic required
@@ -11,7 +11,7 @@ import dev.pinaki.todoapp.ui.base.diffutil.base.BaseDiffUtilCallback
 interface ComparableItem<T> {
 
     /**
-     * Called by the [BaseDiffUtilCallback] to decide whether two object represent the same Item.
+     * Called by the [DeprecatedBaseDiffUtilCallback] to decide whether two object represent the same Item.
      * <p>
      * For example, if your items have unique ids, this method should check their id equality.
      */
@@ -19,10 +19,10 @@ interface ComparableItem<T> {
 
 
     /**
-     * Called by the [BaseDiffUtilCallback] when it wants to check whether two items have the same data.
+     * Called by the [DeprecatedBaseDiffUtilCallback] when it wants to check whether two items have the same data.
      * DiffUtil uses this information to detect if the contents of an item has changed.
      * <p>
-     * [BaseDiffUtilCallback] uses this method to check equality instead of {@link Object#equals(Object)}
+     * [DeprecatedBaseDiffUtilCallback] uses this method to check equality instead of {@link Object#equals(Object)}
      * so that you can change its behavior depending on your UI.
      * For example, if you are using DiffUtil with a
      * [RecyclerView.Adapter], you should

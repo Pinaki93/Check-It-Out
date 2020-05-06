@@ -32,4 +32,5 @@
     <string name="err_list_name_empty">List name can\'t be empty</string>
     <string name="some_error_occurred">Some Error Occurred</string>
     <string name="msg_todo_lists_empty">No lists added. To start, click on the \"Add List\" option below</string>
+    <string name="msg_list_added_successfully">List Added!</string>
 </resources>

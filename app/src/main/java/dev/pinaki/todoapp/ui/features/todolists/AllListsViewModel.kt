@@ -2,11 +2,9 @@ package dev.pinaki.todoapp.ui.features.todolists
 
 import android.app.Application
 import androidx.lifecycle.*
+import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.data.TodoListRepository
 import dev.pinaki.todoapp.data.db.entity.TodoList
-import dev.pinaki.todoapp.ds.Empty
-import dev.pinaki.todoapp.ds.Event
-import dev.pinaki.todoapp.ds.Result
 import dev.pinaki.todoapp.util.launchInIOScope
 
 class AllListsViewModel(
@@ -15,42 +13,39 @@ class AllListsViewModel(
 ) :
     AndroidViewModel(application) {
 
-
-    private val _lists: MutableLiveData<Event<Result<List<TodoList>>>> = MutableLiveData()
-    val lists: LiveData<Event<Result<List<TodoList>>>>
-        get() = _lists
+    val todoLists: LiveData<List<TodoList>>
+        get() = _todoLists
 
 
-    private val _addListResult: MutableLiveData<Event<Result<Empty>>> = MutableLiveData()
-    val addTodoResult: MutableLiveData<Event<Result<Empty>>>
-        get() = _addListResult
-
-    fun loadTodoLists() {
-        _lists.postValue(Event(Result.Loading))
-
-        launchInIOScope {
-            try {
-                _lists.postValue(Event(Result.Success(todoListRepository.getAllTodoLists())))
-            } catch (e: Exception) {
-                _lists.postValue(Event(Result.Error(e)))
-            }
+    private val _todoLists = todoListRepository.observeAllTodoLists()
+        .distinctUntilChanged()
+        .switchMap {
+            _showEmptyView.value = it.isNullOrEmpty()
+            return@switchMap MutableLiveData(it)
         }
-    }
+
+    private val _showEmptyView = MutableLiveData<Boolean>(true)
+    val showEmptyView: LiveData<Boolean>
+        get() = _showEmptyView
+
+
+    val toast = MutableLiveData<Int>()
 
     fun addTodoList(listName: String, listDescription: String?) {
         val todoList = TodoList(title = listName, description = listDescription)
 
-        _addListResult.postValue(Event(Result.Loading))
         launchInIOScope {
             try {
                 todoListRepository.addTodoList(todoList)
-                _addListResult.postValue(Event(Result.Success(Empty)))
-
-                loadTodoLists()
+                toast.postValue(R.string.msg_list_added_successfully)
             } catch (e: Exception) {
-                _addListResult.postValue(Event(Result.Error(e)))
+                toast.postValue(R.string.msg_error_occurred)
             }
         }
+    }
+
+    fun onTodoListItemClick(item: TodoList) {
+
     }
 
     internal class Factory(

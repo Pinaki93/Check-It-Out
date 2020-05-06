@@ -14,7 +14,7 @@ import dev.pinaki.todoapp.data.db.entity.TodoItem
 import dev.pinaki.todoapp.databinding.TodoHeaderBinding
 import dev.pinaki.todoapp.databinding.TodoItemBinding
 import dev.pinaki.todoapp.ds.ComparableItem
-import dev.pinaki.todoapp.ui.base.diffutil.base.BaseDiffUtilCallback
+import dev.pinaki.todoapp.ui.base.diffutil.base.DeprecatedBaseDiffUtilCallback
 import dev.pinaki.todoapp.util.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -74,7 +74,7 @@ class TodoListingAdapter(val application: Application) :
 
     var items: MutableList<TodoViewItem> = ArrayList()
         set(value) {
-            val diff = DiffUtil.calculateDiff(BaseDiffUtilCallback(field, value))
+            val diff = DiffUtil.calculateDiff(DeprecatedBaseDiffUtilCallback(field, value))
 
             field.clear()
             field.addAll(value)
