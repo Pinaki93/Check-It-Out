@@ -9,7 +9,7 @@ import dev.pinaki.todoapp.data.db.entity.TodoList
 import dev.pinaki.todoapp.databinding.TodoListListItemBinding
 import dev.pinaki.todoapp.ui.base.adapter.BaseAdapter
 
-class TodoListAdapter(private val viewModel: AllListsViewModel) :
+internal class TodoListAdapter(private val viewModel: AllListsViewModel) :
     BaseAdapter<TodoList, TodoListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder.from(parent)

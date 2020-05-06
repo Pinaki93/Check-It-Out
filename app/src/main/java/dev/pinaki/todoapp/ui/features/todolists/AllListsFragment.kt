@@ -1,5 +1,6 @@
 package dev.pinaki.todoapp.ui.features.todolists
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,9 @@ class AllListsFragment : Fragment(), AddTodoListBottomSheetDialogFragment.Listen
     private lateinit var binding: AllListBinding
     private lateinit var viewModel: AllListsViewModel
     private lateinit var todoListAdapter: TodoListAdapter
+
+    private var listener: Listener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,6 +44,15 @@ class AllListsFragment : Fragment(), AddTodoListBottomSheetDialogFragment.Listen
         binding.executePendingBindings()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val containerActivity = activity
+        if (containerActivity is Listener) {
+            listener = containerActivity
+        }
+    }
+
     private fun initUI() {
         todoListAdapter = TodoListAdapter(viewModel)
 
@@ -60,13 +73,25 @@ class AllListsFragment : Fragment(), AddTodoListBottomSheetDialogFragment.Listen
         viewModel.toast.observe(this, Observer {
             toast(getString(it))
         })
+
+        viewModel.showTodoList.observe(this, Observer {
+            it.getContentIfNotHandled()?.run {
+                listener?.showTodoDetails(this)
+            }
+        })
     }
 
-    companion object {
-        fun newInstance() = AllListsFragment()
+    interface Listener {
+        fun showTodoDetails(id: Int)
     }
 
     override fun onAddTodoList(listName: String, listDescription: String?) {
         viewModel.addTodoList(listName, listDescription)
+    }
+
+    companion object {
+        const val TAG = "AllListFragment"
+
+        fun newInstance() = AllListsFragment()
     }
 }

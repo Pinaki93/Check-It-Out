@@ -5,47 +5,43 @@ import androidx.lifecycle.*
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.data.TodoListRepository
 import dev.pinaki.todoapp.data.db.entity.TodoList
+import dev.pinaki.todoapp.ds.Event
 import dev.pinaki.todoapp.util.launchInIOScope
 
-class AllListsViewModel(
+internal class AllListsViewModel(
     application: Application,
     private val todoListRepository: TodoListRepository
 ) :
     AndroidViewModel(application) {
 
-    val todoLists: LiveData<List<TodoList>>
-        get() = _todoLists
+    val todoLists = todoListRepository.observeAllTodoLists().distinctUntilChanged()
+    val showEmptyView = todoLists.map { it.isNullOrEmpty() }
 
+    private val _toast = MutableLiveData<Int>()
+    val toast: LiveData<Int> = _toast
 
-    private val _todoLists = todoListRepository.observeAllTodoLists()
-        .distinctUntilChanged()
-        .switchMap {
-            _showEmptyView.value = it.isNullOrEmpty()
-            return@switchMap MutableLiveData(it)
+    private val _showTodoList = MutableLiveData<Event<Int>>()
+    val showTodoList: LiveData<Event<Int>> = _showTodoList
+
+    fun onTodoListItemClick(item: TodoList) {
+        item.id?.run {
+            _showTodoList.value = Event(this)
         }
 
-    private val _showEmptyView = MutableLiveData<Boolean>(true)
-    val showEmptyView: LiveData<Boolean>
-        get() = _showEmptyView
+    }
 
-
-    val toast = MutableLiveData<Int>()
-
+    // TODO: move this to Add Todo Bottom Sheet's View  Model
     fun addTodoList(listName: String, listDescription: String?) {
         val todoList = TodoList(title = listName, description = listDescription)
 
         launchInIOScope {
             try {
                 todoListRepository.addTodoList(todoList)
-                toast.postValue(R.string.msg_list_added_successfully)
+                _toast.postValue(R.string.msg_list_added_successfully)
             } catch (e: Exception) {
-                toast.postValue(R.string.msg_error_occurred)
+                _toast.postValue(R.string.msg_error_occurred)
             }
         }
-    }
-
-    fun onTodoListItemClick(item: TodoList) {
-
     }
 
     internal class Factory(
@@ -62,8 +58,7 @@ class AllListsViewModel(
 
     companion object {
         fun getInstance(
-            fragment: AllListsFragment,
-            repository: TodoListRepository
+            fragment: AllListsFragment, repository: TodoListRepository
         ): AllListsViewModel {
             return ViewModelProviders.of(
                 fragment,

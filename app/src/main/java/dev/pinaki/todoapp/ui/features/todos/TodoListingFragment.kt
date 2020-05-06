@@ -315,4 +315,17 @@ class TodoListingFragment : Fragment(), OnItemInteractionListener,
     override fun onItemClicked(item: TodoItem) {
         AddEditTodoActivity.startActivity(this, item)
     }
+
+    companion object {
+        private const val KEY_ID = "id"
+        const val TAG = "TodoListingFragment"
+
+        fun newInstance(id: Int): TodoListingFragment {
+            return TodoListingFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(KEY_ID, id)
+                }
+            }
+        }
+    }
 }
