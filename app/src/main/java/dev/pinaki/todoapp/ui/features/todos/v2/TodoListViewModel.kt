@@ -9,10 +9,10 @@ class TodoListViewModel(
     private val todoRepository: TodoRepository
 ) : AndroidViewModel(application) {
 
+    //////////////////////////////////////////////////////////////////////////////////////
+    // Exposed ViewModels
+    /////////////////////////////////////////////////////////////////////////////////////
     private val _id = MutableLiveData<Int>()
-
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
 
     private val _item = _id.switchMap {
         if (_loading.value == true) {
@@ -23,13 +23,22 @@ class TodoListViewModel(
     }
 
     val listItem = _item.map { it.todoList }
-
     val todos = _item.map { it.items }
+    val empty = todos.map { it.isNullOrEmpty() }
 
+    private val _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean> = _loading
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    // Exposed Methods
+    /////////////////////////////////////////////////////////////////////////////////////
     fun start(id: Int) {
         this._id.value = id
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////
+    // Factory and Companion
+    /////////////////////////////////////////////////////////////////////////////////////
     internal class Factory(
         private val application: Application,
         private val todoRepository: TodoRepository

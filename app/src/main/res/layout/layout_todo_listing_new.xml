@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data class="TodoListBinding">
 
@@ -20,32 +21,15 @@
                 android:layout_height="match_parent"
                 app:GoneUnless="@{viewModel.loading}">
 
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-
-                <include layout="@layout/item_todo_loader" />
-            </LinearLayout>
+            <include layout="@layout/loader_todo_listing" />
         </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+        <include
+                layout="@layout/layout_empty_todos"
+                app:viewModel="@{viewModel}"
+                tools:visibility="gone" />
+
 
         <FrameLayout
                 android:id="@+id/main_layout"
@@ -60,7 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
-                    android:paddingBottom="120dp" />
+                    android:paddingBottom="120dp"
+                    app:todos="@{viewModel.todos}" />
 
             <androidx.cardview.widget.CardView
                     android:id="@+id/cv_add_item"

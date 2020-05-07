@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="TodosBinding">
+
+        <variable
+                name="viewmodel"
+                type="dev.pinaki.todoapp.ui.features.todos.v2.TodoListViewModel" />
+
+        <variable
+                name="item"
+                type="dev.pinaki.todoapp.data.db.entity.TodoItem" />
+    </data>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <RelativeLayout
+                android:id="@+id/edit_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/favColor">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="24dp"
+                    android:src="@drawable/ic_mode_edit_white_24dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/delete_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/deleteColor">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="24dp"
+                    android:src="@drawable/ic_delete_white_24dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+                android:id="@+id/todo_item_container_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FDFFFC"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:id="@+id/todo_item_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="24dp"
+                    android:paddingBottom="12dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/cb_todo_done"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="16dp"
+                            android:button="@drawable/checked"
+                            android:checked="@{item.done}"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp" />
+
+                    <TextView
+                            android:id="@+id/tv_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@{item.title}"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            app:fontFamily="sans-serif"
+                            tools:text="Collect Laundry" />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/tv_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:alpha=".40"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            app:GoneUnless="@{item.done}"
+                            app:fontFamily="sans-serif-light"
+                            tools:text="Last Modified on 13th September 2019" />
+
+                    <dev.pinaki.todoapp.ui.view.EllipsizingTextView
+                            android:id="@+id/tv_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:inputType="none"
+                            android:maxLines="2"
+                            android:text="@{item.description}"
+                            android:textColor="#8b8b8b"
+                            android:textSize="12sp"
+                            android:visibility="gone"
+                            app:fontFamily="sans-serif-light"
+                            tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
+                            tools:visibility="visible" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/item_divider" />
+
+        </LinearLayout>
+    </FrameLayout>
+</layout>

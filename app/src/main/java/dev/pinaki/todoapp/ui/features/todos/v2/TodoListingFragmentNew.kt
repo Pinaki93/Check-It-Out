@@ -30,8 +30,10 @@ class TodoListingFragmentNew : Fragment() {
         viewModel = TodoListViewModel.getInstance(this, TodoRepository(context!!))
 
         binding.viewModel = viewModel
-        binding.executePendingBindings()
         binding.lifecycleOwner = this
+        binding.executePendingBindings()
+
+        binding.rvItems.adapter = TodosAdapter(viewModel)
 
         viewModel.start(arguments?.getInt(ARG_TODO_LIST_ID) ?: 0)
     }
