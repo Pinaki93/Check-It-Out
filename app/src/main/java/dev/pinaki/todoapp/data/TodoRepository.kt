@@ -35,6 +35,8 @@ class TodoRepository(context: Context) {
         todoDao.delete(item)
     }
 
+    fun observerTodosForList(listId: Int) = todoListDao.observeTodosForList(listId)
+
     suspend fun moveItem(
         itemToMove: TodoItem,
         start: Int,

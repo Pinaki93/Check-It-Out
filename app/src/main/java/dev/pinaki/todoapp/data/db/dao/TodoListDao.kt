@@ -13,7 +13,7 @@ interface TodoListDao {
 
     @Transaction
     @Query("select * from todo_list where id=:id")
-    suspend fun getTodosForList(id: String): List<TodoListWithItems>
+    fun observeTodosForList(id: Int): LiveData<TodoListWithItems>
 
     @Insert
     suspend fun addTodoList(list: TodoList)

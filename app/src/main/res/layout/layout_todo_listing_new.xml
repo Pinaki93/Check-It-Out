@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data class="TodoListBinding">
+
+        <variable
+                name="viewModel"
+                type="dev.pinaki.todoapp.ui.features.todos.v2.TodoListViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/loader_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:GoneUnless="@{viewModel.loading}">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+
+                <include layout="@layout/item_todo_loader" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <FrameLayout
+                android:id="@+id/main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                app:GoneUnless="@{!viewModel.loading}">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingBottom="120dp" />
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_add_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:paddingTop="16dp"
+                    app:cardElevation="32dp">
+
+                <dev.pinaki.todoapp.ui.view.AddTodoItemView
+                        android:id="@+id/add_todo_item_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

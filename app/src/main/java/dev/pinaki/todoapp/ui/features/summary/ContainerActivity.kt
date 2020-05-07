@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.ui.features.todolists.AllListsFragment
-import dev.pinaki.todoapp.ui.features.todos.TodoListingFragment
+import dev.pinaki.todoapp.ui.features.todos.v2.TodoListingFragmentNew
 
 class ContainerActivity : AppCompatActivity(), AllListsFragment.Listener {
 
@@ -19,7 +19,7 @@ class ContainerActivity : AppCompatActivity(), AllListsFragment.Listener {
 
     override fun showTodoDetails(id: Int) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, TodoListingFragment.newInstance(id))
+            .replace(R.id.container, TodoListingFragmentNew.newInstance(id))
             .addToBackStack(null)
             .commit()
     }
