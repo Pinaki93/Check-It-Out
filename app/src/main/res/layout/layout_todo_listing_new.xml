@@ -59,14 +59,13 @@
                     android:paddingTop="16dp"
                     app:cardElevation="32dp">
 
-                <dev.pinaki.todoapp.ui.view.AddTodoItemView
+                <dev.pinaki.todoapp.ui.features.todos.v2.AddTodoItemView
                         android:id="@+id/add_todo_item_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        app:collapse="@{!isKeyboardOpen}" />
+                        android:focusableInTouchMode="true" />
             </androidx.cardview.widget.CardView>
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

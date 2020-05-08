@@ -3,18 +3,18 @@ package dev.pinaki.todoapp.ui.features.todos.v2
 import android.app.Application
 import androidx.lifecycle.*
 import dev.pinaki.todoapp.data.TodoRepository
+import dev.pinaki.todoapp.data.db.entity.TodoItem
+import dev.pinaki.todoapp.data.db.entity.TodoList
+import dev.pinaki.todoapp.data.db.entity.TodoListWithItems
 
 class TodoListViewModel(
     application: Application,
     private val todoRepository: TodoRepository
 ) : AndroidViewModel(application) {
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    // Exposed ViewModels
-    /////////////////////////////////////////////////////////////////////////////////////
     private val _id = MutableLiveData<Int>()
 
-    private val _item = _id.switchMap {
+    private val _item: LiveData<TodoListWithItems> = _id.switchMap {
         if (_loading.value == true) {
             _loading.value = false
         }
@@ -22,23 +22,17 @@ class TodoListViewModel(
         todoRepository.observerTodosForList(it)
     }
 
-    val listItem = _item.map { it.todoList }
-    val todos = _item.map { it.items }
-    val empty = todos.map { it.isNullOrEmpty() }
+    val listItem: LiveData<TodoList> = _item.map { it.todoList }
+    val todos: LiveData<List<TodoItem>> = _item.map { it.items }
+    val empty: LiveData<Boolean> = todos.map { it.isNullOrEmpty() }
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    // Exposed Methods
-    /////////////////////////////////////////////////////////////////////////////////////
     fun start(id: Int) {
         this._id.value = id
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    // Factory and Companion
-    /////////////////////////////////////////////////////////////////////////////////////
     internal class Factory(
         private val application: Application,
         private val todoRepository: TodoRepository
