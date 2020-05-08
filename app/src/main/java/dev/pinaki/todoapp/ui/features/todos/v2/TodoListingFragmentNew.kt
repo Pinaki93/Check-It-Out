@@ -1,5 +1,6 @@
 package dev.pinaki.todoapp.ui.features.todos.v2
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,13 @@ import androidx.fragment.app.Fragment
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.databinding.TodoListBinding
+import dev.pinaki.todoapp.util.IsKeyboardOpen
 
 class TodoListingFragmentNew : Fragment() {
 
     private lateinit var binding: TodoListBinding
     private lateinit var viewModel: TodoListViewModel
+    private lateinit var isKeyboardOpen: IsKeyboardOpen
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,12 +33,20 @@ class TodoListingFragmentNew : Fragment() {
         viewModel = TodoListViewModel.getInstance(this, TodoRepository(context!!))
 
         binding.viewModel = viewModel
+        binding.isKeyboardOpen = isKeyboardOpen
         binding.lifecycleOwner = this
         binding.executePendingBindings()
 
         binding.rvItems.adapter = TodosAdapter(viewModel)
 
         viewModel.start(arguments?.getInt(ARG_TODO_LIST_ID) ?: 0)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity?.let {
+            isKeyboardOpen = IsKeyboardOpen(it)
+        }
     }
 
     companion object {
@@ -51,5 +62,4 @@ class TodoListingFragmentNew : Fragment() {
             }
         }
     }
-
 }
