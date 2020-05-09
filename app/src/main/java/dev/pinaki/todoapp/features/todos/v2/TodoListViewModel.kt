@@ -2,6 +2,7 @@ package dev.pinaki.todoapp.features.todos.v2
 
 import android.app.Application
 import androidx.lifecycle.*
+import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.common.util.isTodoSectionChanged
 import dev.pinaki.todoapp.common.util.launchInIOScope
 import dev.pinaki.todoapp.data.source.TodoListRepository
@@ -57,6 +58,9 @@ class TodoListViewModel(
     private val _toast = MutableLiveData<Int>()
     val toast: LiveData<Int> = _toast
 
+    private val _showDeleteSnackBar = MutableLiveData<TodoItem>()
+    val showDeleteSnackBar: LiveData<TodoItem> = _showDeleteSnackBar
+
     private var startDragPosition: Int? = null
     private var listStateAtStartDrag: List<TodoItem>? = null
 
@@ -76,7 +80,7 @@ class TodoListViewModel(
                 })
             } catch (e: Exception) {
                 e.printStackTrace()
-                _toast.postValue(dev.pinaki.todoapp.R.string.msg_error_occurred)
+                showErrorToast()
             }
         }
     }
@@ -87,11 +91,13 @@ class TodoListViewModel(
     }
 
     fun onDragComplete(position: Int) {
+        if (startDragPosition == null || startDragPosition == position || position == -1) return// user is probably swiping
+
         listStateAtStartDrag?.run {
             startDragPosition?.let {
                 if (isTodoSectionChanged(this, it, position)) {
                     // reload list by setting id again
-                    _id.value = _id.value
+                    reLoadTodos()
                     listStateAtStartDrag = null
                     startDragPosition = null
                 } else {
@@ -103,8 +109,55 @@ class TodoListViewModel(
         }
     }
 
+    private fun reLoadTodos() {
+        _id.value = _id.value
+    }
+
     private suspend fun moveItem(item: TodoItem, start: Int, end: Int) {
-        todoRepository.moveItem(item, start, end)
+        try {
+            todoRepository.moveItem(item, start, end)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            reLoadTodos()
+            showErrorToast()
+        } finally {
+            listStateAtStartDrag = null
+            startDragPosition = null
+        }
+    }
+
+    fun deleteItem(position: Int) {
+        val todos = todos.value
+
+        if (todos.isNullOrEmpty()) throw IllegalStateException("Attempting delete on null list!!")
+
+        launchInIOScope {
+            val itemToDelete = todos[position]
+
+            try {
+                todoRepository.deleteTodo(itemToDelete)
+                _showDeleteSnackBar.postValue(itemToDelete)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                reLoadTodos()
+                showErrorToast()
+            }
+        }
+    }
+
+    fun restoreTodoItem(item: TodoItem) {
+        launchInIOScope {
+            try {
+                todoRepository.addTodo(item, false)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showErrorToast()
+            }
+        }
+    }
+
+    private fun showErrorToast() {
+        _toast.postValue(R.string.msg_error_occurred)
     }
 
     @Suppress("UNCHECKED_CAST")

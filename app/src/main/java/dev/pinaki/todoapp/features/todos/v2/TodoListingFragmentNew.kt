@@ -7,13 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.common.ui.adapter.OnItemInteractionListener
 import dev.pinaki.todoapp.common.ui.adapter.TouchHelperCallback
 import dev.pinaki.todoapp.common.util.IsKeyboardOpen
+import dev.pinaki.todoapp.common.util.toast
 import dev.pinaki.todoapp.data.source.TodoListRepository
 import dev.pinaki.todoapp.data.source.TodoRepository
 import dev.pinaki.todoapp.databinding.TodoListBinding
@@ -40,12 +43,10 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val todoRepository =
-            TodoRepository(context!!)
-        val todoListRepository =
-            TodoListRepository(context!!)
+        val todoRepository = TodoRepository(context!!)
         addViewModel = AddTodoViewModel.newInstance(this, todoRepository)
-        listingViewModel = TodoListViewModel.getInstance(this, todoRepository, todoListRepository)
+        listingViewModel =
+            TodoListViewModel.getInstance(this, todoRepository, TodoListRepository(context!!))
 
         binding.run {
             this.viewModel = listingViewModel
@@ -70,6 +71,22 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
         val listId = arguments?.getInt(ARG_TODO_LIST_ID) ?: 0
         addViewModel.start(listId)
         listingViewModel.start(arguments?.getInt(ARG_TODO_LIST_ID) ?: 0)
+
+        initUI()
+    }
+
+    private fun initUI() {
+        listingViewModel.showDeleteSnackBar.observe(this, Observer { item ->
+            Snackbar
+                .make(binding.root, getString(R.string.msg_item_deleted), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.undo)) {
+                    listingViewModel.restoreTodoItem(item)
+                }.show()
+        })
+
+        listingViewModel.toast.observe(this, Observer {
+            toast(getString(it))
+        })
     }
 
     override fun onAttach(context: Context) {
@@ -92,11 +109,11 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
     }
 
     override fun onSwipeLeft(recyclerView: RecyclerView, position: Int) {
-
+        listingViewModel.deleteItem(position)
     }
 
     override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
-
+        //TODO: later on, we can add labels or mark as important using this
     }
 
     companion object {

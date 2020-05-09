@@ -34,4 +34,6 @@
     <string name="msg_todo_lists_empty">No lists added. To start, click on the \"Add List\" option below</string>
     <string name="msg_todos_empty">No Items to show. To add an item, click on the \"Add Item\" option below</string>
     <string name="msg_list_added_successfully">List Added!</string>
+    <string name="msg_item_deleted">Item Deleted</string>
+    <string name="undo">Undo</string>
 </resources>
