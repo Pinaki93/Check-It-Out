@@ -26,4 +26,7 @@ interface TodoListDao {
 
     @Query("select * from todo_list")
     fun observeAllTodoList(): LiveData<List<TodoList>>
+
+    @Query("select * from todo_list where id=:id")
+    fun observeTodoListById(id: Int): LiveData<TodoList>
 }

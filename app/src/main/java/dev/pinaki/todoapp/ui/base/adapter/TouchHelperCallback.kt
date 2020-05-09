@@ -1,11 +1,10 @@
-package dev.pinaki.todoapp.ui.features.todos.adapter.swipeanddrag
+package dev.pinaki.todoapp.ui.base.adapter
 
 import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import dev.pinaki.todoapp.ui.features.todos.adapter.TodoListingAdapter
 
-class TodoItemRecyclerViewCallback(
+class TouchHelperCallback(
     private val listener: OnItemInteractionListener?,
     private val recyclerView: RecyclerView
 ) : ItemTouchHelper.SimpleCallback(
@@ -18,17 +17,16 @@ class TodoItemRecyclerViewCallback(
         target: RecyclerView.ViewHolder
     ): Boolean {
         listener?.onMove(recyclerView, viewHolder.adapterPosition, target.adapterPosition)
-
         return true
     }
 
     override fun getMovementFlags(
         recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
     ) =
-        if (viewHolder is TodoListingAdapter.ContentViewHolder)
+        if (viewHolder is TouchableViewHolder)
             makeMovementFlags(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-                ItemTouchHelper.LEFT
+                viewHolder.getDragFlags(),
+                viewHolder.getSwipeFlags()
             )
         else {
             makeMovementFlags(0, 0)
@@ -37,7 +35,7 @@ class TodoItemRecyclerViewCallback(
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         viewHolder?.let {
-            if (viewHolder is TodoListingAdapter.ContentViewHolder) {
+            if (viewHolder is TouchableViewHolder) {
                 ItemTouchHelper.Callback.getDefaultUIUtil().onSelected(viewHolder.getContentView())
 
                 viewHolder.highlightItem(true)
@@ -48,7 +46,7 @@ class TodoItemRecyclerViewCallback(
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        if (viewHolder is TodoListingAdapter.ContentViewHolder) {
+        if (viewHolder is TouchableViewHolder) {
             ItemTouchHelper.Callback.getDefaultUIUtil().clearView(viewHolder.getContentView())
 
             viewHolder.highlightItem(false)
@@ -80,28 +78,17 @@ class TodoItemRecyclerViewCallback(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (dY == 0f && viewHolder is TodoListingAdapter.ContentViewHolder) {
+        if (dY == 0f && viewHolder is TouchableViewHolder) {
             if (dX <= 0) {
                 // swipe left
                 ItemTouchHelper.Callback.getDefaultUIUtil().onDraw(
-                    c,
-                    recyclerView,
-                    viewHolder.getContentView(),
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
+                    c, recyclerView, viewHolder.getContentView(),
+                    dX, dY, actionState, isCurrentlyActive
                 )
             }
         } else {
             super.onChildDraw(
-                c,
-                recyclerView,
-                viewHolder,
-                dX,
-                dY,
-                actionState,
-                isCurrentlyActive
+                c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
             )
         }
     }

@@ -11,4 +11,6 @@ class TodoListRepository(context: Context) {
     suspend fun addTodoList(list: TodoList) = todoListDao.addTodoList(list)
 
     fun observeAllTodoLists() = todoListDao.observeAllTodoList()
+
+    fun observerTodoListById(id:Int)= todoListDao.observeTodoListById(id)
 }

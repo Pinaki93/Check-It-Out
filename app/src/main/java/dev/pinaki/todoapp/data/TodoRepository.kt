@@ -10,7 +10,6 @@ class TodoRepository(context: Context) {
 
     private val db = TodoDatabase.getInstance(context)
     private val todoDao = db.todoDao()
-    private val todoListDao = db.todoListDao()
 
     suspend fun getAll() = todoDao.getAll().sortedBy {
         it.done
@@ -35,7 +34,7 @@ class TodoRepository(context: Context) {
         todoDao.delete(item)
     }
 
-    fun observerTodosForList(listId: Int) = todoListDao.observeTodosForList(listId)
+    fun observerTodosForList(listId: Int) = todoDao.getItemsByListId(listId)
 
     suspend fun moveItem(
         itemToMove: TodoItem,

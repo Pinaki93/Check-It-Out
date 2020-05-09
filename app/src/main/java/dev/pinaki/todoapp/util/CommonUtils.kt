@@ -129,6 +129,10 @@ fun isSectionChanged(list: List<TodoViewItem>, initialPosition: Int, endPosition
     return oldSectionOfItem != newSectionOfItem
 }
 
+fun isTodoSectionChanged(list: List<TodoItem>, initialPosition: Int, endPosition: Int): Boolean {
+    return list[initialPosition].done != list[endPosition].done
+}
+
 fun TextView.showStrikeThrough(show: Boolean) {
     paintFlags =
         if (show) paintFlags or Paint.STRIKE_THRU_TEXT_FLAG

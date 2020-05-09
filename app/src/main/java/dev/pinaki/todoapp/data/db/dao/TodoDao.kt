@@ -1,5 +1,6 @@
 package dev.pinaki.todoapp.data.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import dev.pinaki.todoapp.data.db.entity.TodoItem
 
@@ -10,6 +11,9 @@ interface TodoDao {
 
     @Query("select * from todo_item where is_done=:isDone order by item_order desc")
     suspend fun getAllItems(isDone: Boolean): List<TodoItem>
+
+    @Query("select * from todo_item  where list_ref_id=:listId order by item_order desc")
+    fun getItemsByListId(listId: Int): LiveData<List<TodoItem>>
 
     @Insert
     suspend fun add(item: TodoItem): Long

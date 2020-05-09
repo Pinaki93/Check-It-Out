@@ -7,13 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dev.pinaki.todoapp.R
+import dev.pinaki.todoapp.data.TodoListRepository
 import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.databinding.TodoListBinding
+import dev.pinaki.todoapp.ui.base.adapter.OnItemInteractionListener
+import dev.pinaki.todoapp.ui.base.adapter.TouchHelperCallback
 import dev.pinaki.todoapp.util.IsKeyboardOpen
 
-class TodoListingFragmentNew : Fragment() {
+class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
 
     private lateinit var binding: TodoListBinding
     private lateinit var addViewModel: AddTodoViewModel
@@ -30,12 +35,15 @@ class TodoListingFragmentNew : Fragment() {
         return binding.root
     }
 
+    private lateinit var todosAdapter: TodosAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val todoRepository = TodoRepository(context!!)
+        val todoListRepository = TodoListRepository(context!!)
         addViewModel = AddTodoViewModel.newInstance(this, todoRepository)
-        listingViewModel = TodoListViewModel.getInstance(this, todoRepository)
+        listingViewModel = TodoListViewModel.getInstance(this, todoRepository, todoListRepository)
 
         binding.run {
             this.viewModel = listingViewModel
@@ -45,9 +53,14 @@ class TodoListingFragmentNew : Fragment() {
             executePendingBindings()
         }
 
+        todosAdapter = TodosAdapter(listingViewModel)
         binding.rvItems.run {
             this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            this.adapter = TodosAdapter(listingViewModel)
+            this.adapter = todosAdapter
+
+            val touchHelperCallback =
+                ItemTouchHelper(TouchHelperCallback(this@TodoListingFragmentNew, this))
+            touchHelperCallback.attachToRecyclerView(this)
         }
 
         binding.addTodoItemView.init(addViewModel, isKeyboardOpen, this)
@@ -62,6 +75,26 @@ class TodoListingFragmentNew : Fragment() {
         activity?.let {
             isKeyboardOpen = IsKeyboardOpen(it)
         }
+    }
+
+    override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {
+        todosAdapter.moveItem(initialPosition, finalPosition)
+    }
+
+    override fun onItemSelected(recyclerView: RecyclerView, position: Int) {
+        listingViewModel.onStartDrag(position)
+    }
+
+    override fun onItemReleased(recyclerView: RecyclerView, position: Int) {
+        listingViewModel.onDragComplete(position)
+    }
+
+    override fun onSwipeLeft(recyclerView: RecyclerView, position: Int) {
+
+    }
+
+    override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
+
     }
 
     companion object {
