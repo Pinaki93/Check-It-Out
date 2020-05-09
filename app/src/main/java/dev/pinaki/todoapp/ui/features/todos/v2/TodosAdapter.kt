@@ -20,7 +20,6 @@ class TodosAdapter(private val viewModel: TodoListViewModel) :
         holder.setItem(getItem(position))
     }
 
-
     class TodoViewHolder(
         private val viewModel: TodoListViewModel,
         private val binding: TodosBinding

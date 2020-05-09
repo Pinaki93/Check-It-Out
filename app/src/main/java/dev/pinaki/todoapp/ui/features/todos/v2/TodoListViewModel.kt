@@ -1,7 +1,6 @@
 package dev.pinaki.todoapp.ui.features.todos.v2
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import dev.pinaki.todoapp.data.TodoRepository
 import dev.pinaki.todoapp.data.db.entity.TodoItem
@@ -27,9 +26,20 @@ class TodoListViewModel(
     }
 
     val listItem: LiveData<TodoList> = _item.map { it.todoList }
+
     val todos: LiveData<List<TodoItem>> = _item.map {
-        Log.d("ItemTest", "callback: $it")
-        ArrayList(it.items)
+        val itemsMap: Map<Boolean, List<TodoItem>> = it.items.groupBy { item -> item.done }
+        val orderedList = ArrayList<TodoItem>()
+
+        // add incomplete tasks followed by complete ones
+        itemsMap[false]?.run {
+            orderedList.addAll(this)
+        }
+        itemsMap[true]?.run {
+            orderedList.addAll(this)
+        }
+
+        orderedList
     }
 
     val empty: LiveData<Boolean> = todos.map { it.isNullOrEmpty() }

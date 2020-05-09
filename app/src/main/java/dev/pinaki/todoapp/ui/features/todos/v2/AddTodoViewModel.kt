@@ -31,19 +31,6 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
 
     private val _listId = MutableLiveData<Int>()
 
-    class Factory(
-        private val fragment: TodoListingFragmentNew,
-        private val repository: TodoRepository
-    ) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return AddTodoViewModel(
-                application = fragment.activity!!.application,
-                todoRepository = repository
-            ) as T
-        }
-    }
-
     fun onTitleSubmit() {
         if (showDescription.value == true) {
             _showKeyboardOnDescriptionField.value = true
@@ -85,6 +72,19 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
 
     fun start(listId: Int) {
         _listId.value = listId
+    }
+
+    class Factory(
+        private val fragment: TodoListingFragmentNew,
+        private val repository: TodoRepository
+    ) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return AddTodoViewModel(
+                application = fragment.activity!!.application,
+                todoRepository = repository
+            ) as T
+        }
     }
 
     companion object {
