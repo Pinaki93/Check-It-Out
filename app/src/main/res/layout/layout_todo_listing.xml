@@ -63,7 +63,7 @@
                     android:paddingTop="16dp"
                     app:cardElevation="32dp">
 
-                <dev.pinaki.todoapp.ui.view.AddTodoItemView
+                <dev.pinaki.todoapp.features.todos.obsolete.view.AddTodoItemView
                         android:id="@+id/add_todo_item_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

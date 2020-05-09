@@ -98,7 +98,7 @@
                             app:fontFamily="sans-serif-light"
                             tools:text="Last Modified on 13th September 2019" />
 
-                    <dev.pinaki.todoapp.ui.view.EllipsizingTextView
+                    <dev.pinaki.todoapp.common.ui.view.EllipsizingTextView
                             android:id="@+id/tv_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

@@ -5,11 +5,11 @@
 
         <variable
                 name="viewModel"
-                type="dev.pinaki.todoapp.ui.features.todolists.AllListsViewModel" />
+                type="dev.pinaki.todoapp.features.todolists.AllListsViewModel" />
 
         <variable
                 name="todoList"
-                type="dev.pinaki.todoapp.data.db.entity.TodoList" />
+                type="dev.pinaki.todoapp.data.source.local.db.entity.TodoList" />
 
     </data>
 

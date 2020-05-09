@@ -7,11 +7,11 @@
 
         <variable
                 name="viewModel"
-                type="dev.pinaki.todoapp.ui.features.todos.v2.TodoListViewModel" />
+                type="dev.pinaki.todoapp.features.todos.v2.TodoListViewModel" />
 
         <variable
                 name="isKeyboardOpen"
-                type="dev.pinaki.todoapp.util.IsKeyboardOpen" />
+                type="dev.pinaki.todoapp.common.util.IsKeyboardOpen" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,7 +59,7 @@
                     android:paddingTop="16dp"
                     app:cardElevation="32dp">
 
-                <dev.pinaki.todoapp.ui.features.todos.v2.AddTodoItemView
+                <dev.pinaki.todoapp.features.todos.v2.AddTodoItemView
                         android:id="@+id/add_todo_item_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

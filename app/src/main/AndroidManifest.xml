@@ -13,22 +13,22 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="dev.pinaki.todoapp.ui.features.summary.ContainerActivity">
+        <activity android:name="dev.pinaki.todoapp.features.ContainerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="dev.pinaki.todoapp.ui.features.todos.TodoListingActivity">
+        <activity android:name="dev.pinaki.todoapp.features.todos.obsolete.TodoListingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="dev.pinaki.todoapp.ui.features.addtodo.AddEditTodoActivity" />
-        <activity android:name=".util.dbbrowser.DatabaseBrowserActivity" />
+        <activity android:name="dev.pinaki.todoapp.features.edittodo.AddEditTodoActivity" />
+        <activity android:name="dev.pinaki.todoapp.common.util.dbbrowser.DatabaseBrowserActivity" />
     </application>
 
 </manifest>

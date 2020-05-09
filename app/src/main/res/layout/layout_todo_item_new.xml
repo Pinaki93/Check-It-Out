@@ -7,15 +7,15 @@
 
         <variable
                 name="viewmodel"
-                type="dev.pinaki.todoapp.ui.features.todos.v2.TodoListViewModel" />
+                type="dev.pinaki.todoapp.features.todos.v2.TodoListViewModel" />
 
         <variable
                 name="item"
-                type="dev.pinaki.todoapp.data.db.entity.TodoItem" />
+                type="dev.pinaki.todoapp.data.source.local.db.entity.TodoItem" />
 
         <import type="androidx.appcompat.widget.AppCompatCheckBox" />
 
-        <import type="dev.pinaki.todoapp.util.CommonUtilsKt" />
+        <import type="dev.pinaki.todoapp.common.util.CommonUtilsKt" />
     </data>
 
     <FrameLayout
@@ -119,7 +119,7 @@
                             app:fontFamily="sans-serif-light"
                             tools:text="Last Modified on 13th September 2019" />
 
-                    <dev.pinaki.todoapp.ui.view.EllipsizingTextView
+                    <dev.pinaki.todoapp.common.ui.view.EllipsizingTextView
                             android:id="@+id/tv_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

@@ -5,7 +5,7 @@
 
         <variable
                 name="viewModel"
-                type="dev.pinaki.todoapp.ui.features.todolists.AllListsViewModel" />
+                type="dev.pinaki.todoapp.features.todolists.AllListsViewModel" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
