@@ -9,7 +9,6 @@ import androidx.lifecycle.LifecycleOwner
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.databinding.AddTodoViewBinding
 import dev.pinaki.todoapp.util.IsKeyboardOpen
-import dev.pinaki.todoapp.util.showKeyboard
 
 class AddTodoItemView : ConstraintLayout {
 
@@ -39,11 +38,5 @@ class AddTodoItemView : ConstraintLayout {
 
             executePendingBindings()
         }
-    }
-
-    fun prepareForNewItem() {
-        binding.etTodoItem.text.clear()
-        binding.etTodoItemDescription.text.clear()
-        context.showKeyboard(binding.etTodoItem)
     }
 }

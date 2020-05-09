@@ -13,17 +13,23 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
     val description = MutableLiveData<String>()
     val showDescription = MutableLiveData<Boolean>()
 
-    val showKeyboardOnTitleField = MutableLiveData<Boolean>()
-    val showKeyboardOnDescriptionField = MutableLiveData<Boolean>()
-
-    private val _listId = MutableLiveData<Int>()
-
-    init {
-        showDescription.map {
-            showKeyboardOnDescriptionField.value = true
-            return@map it
+    private val _showKeyboardOnTitleField = MediatorLiveData<Boolean>().also {
+        it.addSource(showDescription) { value ->
+            if (!value) {
+                it.value = true
+            }
         }
     }
+    val showKeyboardOnTitleField: LiveData<Boolean> = _showKeyboardOnTitleField
+
+    private val _showKeyboardOnDescriptionField = MediatorLiveData<Boolean>().also {
+        it.addSource(showDescription) { value ->
+            it.value = value
+        }
+    }
+    val showKeyboardOnDescriptionField: LiveData<Boolean> = _showKeyboardOnDescriptionField
+
+    private val _listId = MutableLiveData<Int>()
 
     class Factory(
         private val fragment: TodoListingFragmentNew,
@@ -40,7 +46,7 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
 
     fun onTitleSubmit() {
         if (showDescription.value == true) {
-            showKeyboardOnDescriptionField.value = true
+            _showKeyboardOnDescriptionField.value = true
         } else {
             onContinue()
         }
@@ -73,7 +79,7 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
 
             title.postValue("")
             description.postValue("")
-            showKeyboardOnTitleField.postValue(true)
+            _showKeyboardOnTitleField.postValue(true)
         }
     }
 

@@ -42,6 +42,7 @@
                 android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:onKeyboardDone="@{()-> viewModel.onTitleSubmit()}"
+                app:showKeyboard="@{viewModel.showKeyboardOnTitleField}"
                 tools:text="Buy chocolates" />
 
         <EditText

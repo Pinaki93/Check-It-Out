@@ -11,11 +11,12 @@ import dev.pinaki.todoapp.ui.base.adapter.BaseAdapter
 
 class TodosAdapter(private val viewModel: TodoListViewModel) :
     BaseAdapter<TodoItem, TodosAdapter.TodoViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodosAdapter.TodoViewHolder {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         return TodoViewHolder.from(parent, viewModel)
     }
 
-    override fun onBindViewHolder(holder: TodosAdapter.TodoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.setItem(getItem(position))
     }
 

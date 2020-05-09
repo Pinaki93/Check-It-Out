@@ -12,6 +12,10 @@
         <variable
                 name="item"
                 type="dev.pinaki.todoapp.data.db.entity.TodoItem" />
+
+        <import type="androidx.appcompat.widget.AppCompatCheckBox" />
+
+        <import type="dev.pinaki.todoapp.util.CommonUtilsKt" />
     </data>
 
     <FrameLayout
@@ -79,17 +83,20 @@
                             android:button="@drawable/checked"
                             android:checked="@{item.done}"
                             android:minWidth="0dp"
-                            android:minHeight="0dp" />
+                            android:minHeight="0dp"
+                            android:onClick="@{(view)-> viewmodel.onItemDone(item,((AppCompatCheckBox)view).isChecked())}" />
 
                     <TextView
                             android:id="@+id/tv_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:alpha="@{item.done? .40f : 1f}"
                             android:text="@{item.title}"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             app:fontFamily="sans-serif"
+                            app:strikeThrough="@{item.done}"
                             tools:text="Collect Laundry" />
                 </LinearLayout>
 
@@ -105,6 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:alpha=".40"
+                            android:text="@{(item.done ? String.format(@string/lbl_item_completed_date, CommonUtilsKt.getAsDisplayString(item.dateCompeted)): null)}"
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             app:GoneUnless="@{item.done}"
@@ -121,7 +129,7 @@
                             android:text="@{item.description}"
                             android:textColor="#8b8b8b"
                             android:textSize="12sp"
-                            android:visibility="gone"
+                            app:GoneUnless="@{item.isDescriptionPresent()}"
                             app:fontFamily="sans-serif-light"
                             tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
                             tools:visibility="visible" />

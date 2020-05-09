@@ -1,6 +1,7 @@
 package dev.pinaki.todoapp.data.db.entity
 
 import android.os.Parcelable
+import android.text.TextUtils
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -43,5 +44,7 @@ data class TodoItem(
     /**
      * Right now I think it's fine to use equals for content checking
      */
-    override fun isContentSame(other: TodoItem) = this == other
+    override fun isContentSame(other: TodoItem) = this.equals(other)
+
+    fun isDescriptionPresent() = !TextUtils.isEmpty(description)
 }
