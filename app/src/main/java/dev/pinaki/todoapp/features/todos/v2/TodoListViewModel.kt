@@ -112,6 +112,7 @@ class TodoListViewModel(
 
     private suspend fun moveItem(item: TodoItem, start: Int, end: Int) {
         try {
+//            Log.d("ItemTest", "moveItem($item, $start, $end) called")
             todoRepository.moveItem(item, start, end)
         } catch (e: Exception) {
             e.printStackTrace()

@@ -15,14 +15,19 @@ class TodoRepository(context: Context) {
         it.done
     }
 
-    suspend fun addTodo(item: TodoItem, updateOrderId: Boolean) {
-        val insertId = todoDao.add(item).toInt()
+    private suspend fun getAllById(id: Int) = todoDao.getAllById(id).sortedBy {
+        it.done
+    }
 
-        if (updateOrderId) {
-            val insertedItem = todoDao.getItem(insertId)
-            insertedItem.itemOrder = (insertId + 1).toDouble()
-            todoDao.update(insertedItem)
-        }
+    suspend fun addTodo(item: TodoItem, updateOrderId: Boolean) {
+//        val insertId = todoDao.add(item).toInt()
+//
+//        if (updateOrderId) {
+//            val insertedItem = todoDao.getItem(insertId)
+//            insertedItem.itemOrder = (insertId + 1).toDouble()
+//            todoDao.update(insertedItem)
+//        }
+        todoDao.addItemAndUpdateOrder(item, updateOrderId)
     }
 
     suspend fun updateTodo(item: TodoItem) {
@@ -42,7 +47,7 @@ class TodoRepository(context: Context) {
         end: Int
     ) {
         // items sorted with unchecked items first followed by checked items
-        val allItems = getAll()
+        val allItems = getAllById(itemToMove.listRefId)
         val itemsMap = allItems.groupBy {
             it.done
         }

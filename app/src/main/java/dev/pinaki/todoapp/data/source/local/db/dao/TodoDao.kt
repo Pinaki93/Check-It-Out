@@ -9,11 +9,25 @@ interface TodoDao {
     @Query("select * from todo_item order by item_order desc")
     suspend fun getAll(): List<TodoItem>
 
+    @Query("select * from todo_item  where list_ref_id=:listId order by item_order desc")
+    suspend fun getAllById(listId: Int): List<TodoItem>
+
     @Query("select * from todo_item where is_done=:isDone order by item_order desc")
     suspend fun getAllItems(isDone: Boolean): List<TodoItem>
 
     @Query("select * from todo_item  where list_ref_id=:listId order by item_order desc")
     fun getItemsByListId(listId: Int): LiveData<List<TodoItem>>
+
+    @Transaction
+    open suspend fun addItemAndUpdateOrder(item: TodoItem, updateOrderId: Boolean) {
+        val insertId = add(item).toInt()
+
+        if (updateOrderId) {
+            val insertedItem = getItem(insertId)
+            insertedItem.itemOrder = (insertId + 1).toDouble()
+            update(insertedItem)
+        }
+    }
 
     @Insert
     suspend fun add(item: TodoItem): Long

@@ -2,6 +2,7 @@ package dev.pinaki.todoapp.features.todos.v2
 
 import android.app.Application
 import androidx.lifecycle.*
+import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.common.util.launchInIOScope
 import dev.pinaki.todoapp.data.source.TodoRepository
 import dev.pinaki.todoapp.data.source.local.db.entity.TodoItem
@@ -29,6 +30,9 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
     }
     val showKeyboardOnDescriptionField: LiveData<Boolean> = _showKeyboardOnDescriptionField
 
+    private val _toast = MutableLiveData<Int>()
+    val toast: LiveData<Int> = _toast
+
     private val _listId = MutableLiveData<Int>()
 
     fun onTitleSubmit() {
@@ -50,7 +54,7 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
         val descriptionStr: String? = if (showDescription.value == true) description.value else null
 
         if (titleStr.isNullOrEmpty()) {
-            //show toast
+            _toast.value = R.string.err_item_name_empty
             return
         }
 

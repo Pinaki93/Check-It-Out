@@ -28,8 +28,6 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
     private lateinit var addViewModel: AddTodoViewModel
     private lateinit var listingViewModel: TodoListViewModel
 
-    private var addTodoViewOpenDuringOnPause = false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -86,15 +84,17 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
                 }.show()
         })
 
-        listingViewModel.toast.observe(this, Observer {
-            toast(getString(it))
-        })
-
         listingViewModel.showAddTodoView.observe(this, Observer {
             if (it.hasBeenHandled) return@Observer
 
             showAddTodoView()
         })
+
+        val toastObserver = Observer<Int> {
+            toast(getString(it))
+        }
+        addViewModel.toast.observe(this, toastObserver)
+        listingViewModel.toast.observe(this, toastObserver)
 
         isKeyboardOpen.observe(this, Observer { keyboardOpen ->
             if (!keyboardOpen) {
