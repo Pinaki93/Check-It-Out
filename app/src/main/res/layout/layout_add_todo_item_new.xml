@@ -4,10 +4,6 @@
     <data class="AddTodoViewBinding">
 
         <variable
-                name="isKeyboardOpen"
-                type="dev.pinaki.todoapp.common.util.IsKeyboardOpen" />
-
-        <variable
                 name="viewModel"
                 type="dev.pinaki.todoapp.features.todos.v2.AddTodoViewModel" />
     </data>
@@ -18,9 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#f4f4f4"
-            android:descendantFocusability="beforeDescendants"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:paddingLeft="16dp"
             android:paddingRight="24dp"
             android:paddingBottom="8dp">
@@ -43,7 +36,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:onKeyboardDone="@{()-> viewModel.onTitleSubmit()}"
                 app:showKeyboard="@{viewModel.showKeyboardOnTitleField}"
-                tools:text="Buy chocolates" />
+                tools:text="Buy chocolates">
+
+            <requestFocus />
+        </EditText>
 
         <EditText
                 android:id="@+id/et_todo_item_description"
@@ -59,7 +55,7 @@
                 android:textColor="#8b8b8b"
                 android:textSize="14sp"
                 android:visibility="gone"
-                app:GoneUnless="@{viewModel.showDescription &amp;&amp; isKeyboardOpen}"
+                app:GoneUnless="@{viewModel.showDescription}"
                 app:layout_constraintTop_toBottomOf="@+id/et_todo_item"
                 app:onKeyboardDone="@{()-> viewModel.onDescriptionSubmit()}"
                 app:showKeyboard="@{viewModel.showKeyboardOnDescriptionField}"
@@ -72,8 +68,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:visibility="gone"
-                app:GoneUnless="@{isKeyboardOpen}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_todo_item_description"

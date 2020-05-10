@@ -72,13 +72,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
+                            android:alpha=".60"
                             android:gravity="center"
                             android:paddingTop="4dp"
                             android:text="@{viewModel.todoList.description}"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             app:GoneUnless="@{viewModel.todoList.description != null}"
-                            app:fontFamily="sans-serif-thin"
+                            app:fontFamily="sans-serif-light"
                             app:layout_anchor="@id/tv_title"
                             app:layout_anchorGravity="bottom"
                             tools:text="Morning tasks" />
@@ -97,22 +98,27 @@
             </LinearLayout>
 
 
-            <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_add_item"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_add_todo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:onClick="@{()-> viewModel.addTodoItem()}"
+                    android:src="@drawable/ic_add_black_24dp"
+                    app:backgroundTint="@color/colorAccent"
+                    app:tint="@color/white" />
+
+            <dev.pinaki.todoapp.features.todos.v2.AddTodoItemView
+                    android:id="@+id/add_todo_item_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:paddingTop="16dp"
-                    app:cardElevation="32dp">
-
-                <dev.pinaki.todoapp.features.todos.v2.AddTodoItemView
-                        android:id="@+id/add_todo_item_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true" />
-            </androidx.cardview.widget.CardView>
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:visibility="gone" />
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -15,8 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.common.ui.adapter.OnItemInteractionListener
 import dev.pinaki.todoapp.common.ui.adapter.TouchHelperCallback
-import dev.pinaki.todoapp.common.util.IsKeyboardOpen
-import dev.pinaki.todoapp.common.util.toast
+import dev.pinaki.todoapp.common.util.*
 import dev.pinaki.todoapp.data.source.TodoListRepository
 import dev.pinaki.todoapp.data.source.TodoRepository
 import dev.pinaki.todoapp.databinding.TodoListBinding
@@ -24,9 +23,12 @@ import dev.pinaki.todoapp.databinding.TodoListBinding
 class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
 
     private lateinit var binding: TodoListBinding
+    private lateinit var isKeyboardOpen: IsKeyboardOpen
+
     private lateinit var addViewModel: AddTodoViewModel
     private lateinit var listingViewModel: TodoListViewModel
-    private lateinit var isKeyboardOpen: IsKeyboardOpen
+
+    private var addTodoViewOpenDuringOnPause = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +68,7 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
             touchHelperCallback.attachToRecyclerView(this)
         }
 
-        binding.addTodoItemView.init(addViewModel, isKeyboardOpen, this)
+        binding.addTodoItemView.init(addViewModel, this)
 
         val listId = arguments?.getInt(ARG_TODO_LIST_ID) ?: 0
         addViewModel.start(listId)
@@ -87,6 +89,27 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
         listingViewModel.toast.observe(this, Observer {
             toast(getString(it))
         })
+
+        listingViewModel.showAddTodoView.observe(this, Observer {
+            if (it.hasBeenHandled) return@Observer
+
+            showAddTodoView()
+        })
+
+        isKeyboardOpen.observe(this, Observer { keyboardOpen ->
+            if (!keyboardOpen) {
+                binding.addTodoItemView.gone()
+                binding.fabAddTodo.visible()
+            } else {
+                binding.addTodoItemView.visible()
+                binding.fabAddTodo.gone()
+                binding.addTodoItemView.showKeyboard() // make sure the focus is on the edittext
+            }
+        })
+    }
+
+    private fun showAddTodoView() {
+        activity?.forceShowKeyboard()
     }
 
     override fun onAttach(context: Context) {
@@ -94,6 +117,11 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
         activity?.let {
             isKeyboardOpen = IsKeyboardOpen(it)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.hideKeyboard()
     }
 
     override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {

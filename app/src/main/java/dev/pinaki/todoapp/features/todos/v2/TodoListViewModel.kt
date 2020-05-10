@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.common.util.isTodoSectionChanged
 import dev.pinaki.todoapp.common.util.launchInIOScope
+import dev.pinaki.todoapp.data.ds.Event
 import dev.pinaki.todoapp.data.source.TodoListRepository
 import dev.pinaki.todoapp.data.source.TodoRepository
 import dev.pinaki.todoapp.data.source.local.db.entity.TodoItem
@@ -19,29 +20,25 @@ class TodoListViewModel(
 
     private val _id = MutableLiveData<Int>()
 
-    val todoList: LiveData<TodoList> = _id.distinctUntilChanged().switchMap {
-        todoListRepository.observerTodoListById(it)
-    }
+    val todoList: LiveData<TodoList> =
+        _id.distinctUntilChanged().switchMap { todoListRepository.observerTodoListById(it) }
 
-    val todos: LiveData<List<TodoItem>> = _id.switchMap {
-        if (_loading.value == true)
-            _loading.value = false // sloppy way of setting loading = false, find a better way
+    val todos: LiveData<List<TodoItem>> =
+        _id.switchMap { todoRepository.observerTodosForList(it) }
+            .map { list ->
+                if (_loading.value == true)
+                    _loading.value = false
 
-        todoRepository.observerTodosForList(it)
-    }.map {
-        val itemsMap: Map<Boolean, List<TodoItem>> = it.groupBy { item -> item.done }
-        val orderedList = ArrayList<TodoItem>()
-
-        // add incomplete tasks followed by complete ones
-        itemsMap[false]?.run {
-            orderedList.addAll(this)
-        }
-        itemsMap[true]?.run {
-            orderedList.addAll(this)
-        }
-
-        orderedList
-    }
+                val itemsMap: Map<Boolean, List<TodoItem>> = list.groupBy { item -> item.done }
+                return@map ArrayList<TodoItem>().apply {
+                    itemsMap[false]?.let {
+                        addAll(it)
+                    }
+                    itemsMap[true]?.let {
+                        addAll(it)
+                    }
+                }
+            }
 
     val empty: LiveData<Boolean> = todos.map { it.isNullOrEmpty() }
 
@@ -54,12 +51,19 @@ class TodoListViewModel(
     private val _showDeleteSnackBar = MutableLiveData<TodoItem>()
     val showDeleteSnackBar: LiveData<TodoItem> = _showDeleteSnackBar
 
+    private val _showAddTodoView = MutableLiveData<Event<Boolean>>()
+    val showAddTodoView: LiveData<Event<Boolean>> = _showAddTodoView
+
     private var startDragPosition: Int? = null
     private var listStateAtStartDrag: List<TodoItem>? = null
 
     fun start(id: Int) {
         _loading.value = true
         this._id.value = id
+    }
+
+    fun addTodoItem() {
+        _showAddTodoView.value = Event(true)
     }
 
     fun onItemDone(item: TodoItem, done: Boolean) {

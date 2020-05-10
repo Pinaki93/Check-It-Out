@@ -7,7 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import dev.pinaki.todoapp.R
-import dev.pinaki.todoapp.common.util.IsKeyboardOpen
+import dev.pinaki.todoapp.common.util.showKeyboard
 import dev.pinaki.todoapp.databinding.AddTodoViewBinding
 
 class AddTodoItemView : ConstraintLayout {
@@ -26,17 +26,18 @@ class AddTodoItemView : ConstraintLayout {
         defStyleAttr
     )
 
-    fun init(
-        viewModel: AddTodoViewModel,
-        isKeyboardOpen: IsKeyboardOpen,
-        observer: LifecycleOwner
-    ) {
+    fun init(viewModel: AddTodoViewModel, observer: LifecycleOwner) {
         binding.run {
             this.viewModel = viewModel
-            this.isKeyboardOpen = isKeyboardOpen
             this.lifecycleOwner = observer
 
             executePendingBindings()
+        }
+    }
+
+    fun showKeyboard() {
+        binding.etTodoItem.post {
+            context.showKeyboard(binding.etTodoItem)
         }
     }
 }
