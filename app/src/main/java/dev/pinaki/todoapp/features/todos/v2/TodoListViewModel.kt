@@ -19,19 +19,12 @@ class TodoListViewModel(
 
     private val _id = MutableLiveData<Int>()
 
-    private val todoList: LiveData<TodoList> = _id.distinctUntilChanged().switchMap {
-        //TODO: uncomment below comment when we start showing title/description
-        /*if (_loading.value == true && todos.value != null)
-            _loading.value = false // sloppy way of setting loading = false, find a better way
-
-        */
-
+    val todoList: LiveData<TodoList> = _id.distinctUntilChanged().switchMap {
         todoListRepository.observerTodoListById(it)
     }
 
     val todos: LiveData<List<TodoItem>> = _id.switchMap {
-        //TODO: uncomment below comment when we start showing title/description
-        if (_loading.value == true /*&& todoList.value != null*/)
+        if (_loading.value == true)
             _loading.value = false // sloppy way of setting loading = false, find a better way
 
         todoRepository.observerTodosForList(it)
