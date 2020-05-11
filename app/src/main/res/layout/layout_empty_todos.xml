@@ -6,7 +6,7 @@
 
         <variable
                 name="viewModel"
-                type="dev.pinaki.todoapp.features.todos.v2.TodoListViewModel" />
+                type="dev.pinaki.todoapp.features.todos.v2.TodosViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -13,7 +13,7 @@ import dev.pinaki.todoapp.databinding.TodosBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TodosAdapter(private val viewModel: TodoListViewModel) :
+class TodosAdapter(private val viewModel: TodosViewModel) :
     BaseAdapter<TodoItem, TodosAdapter.TodoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
@@ -31,7 +31,7 @@ class TodosAdapter(private val viewModel: TodoListViewModel) :
     }
 
     class TodoViewHolder(
-        private val viewModel: TodoListViewModel,
+        private val viewModel: TodosViewModel,
         private val binding: TodosBinding
     ) :
         RecyclerView.ViewHolder(binding.root), TouchableViewHolder {
@@ -57,7 +57,7 @@ class TodosAdapter(private val viewModel: TodoListViewModel) :
         }
 
         companion object {
-            fun from(parent: ViewGroup, viewModel: TodoListViewModel): TodoViewHolder {
+            fun from(parent: ViewGroup, viewModel: TodosViewModel): TodoViewHolder {
                 return TodoViewHolder(
                     viewModel = viewModel,
                     binding = DataBindingUtil.inflate(

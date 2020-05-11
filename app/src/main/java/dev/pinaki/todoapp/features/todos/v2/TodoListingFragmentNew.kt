@@ -3,10 +3,8 @@ package dev.pinaki.todoapp.features.todos.v2
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,38 +13,39 @@ import com.google.android.material.snackbar.Snackbar
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.common.ui.adapter.OnItemInteractionListener
 import dev.pinaki.todoapp.common.ui.adapter.TouchHelperCallback
+import dev.pinaki.todoapp.common.ui.fragment.BaseFragment
 import dev.pinaki.todoapp.common.util.*
+import dev.pinaki.todoapp.data.ds.Event
 import dev.pinaki.todoapp.data.source.TodoListRepository
 import dev.pinaki.todoapp.data.source.TodoRepository
 import dev.pinaki.todoapp.databinding.TodoListBinding
 
-class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
+class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractionListener {
 
-    private lateinit var binding: TodoListBinding
     private lateinit var isKeyboardOpen: IsKeyboardOpen
 
     private lateinit var addViewModel: AddTodoViewModel
-    private lateinit var listingViewModel: TodoListViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.layout_todo_listing_new, container, false)
-        return binding.root
-    }
+    private lateinit var listingViewModel: TodosViewModel
 
     private lateinit var todosAdapter: TodosAdapter
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun getLayout() = R.layout.layout_todo_listing_new
 
+    override fun getBinding(
+        inflater: LayoutInflater,
+        layout: Int,
+        parent: ViewGroup?
+    ): TodoListBinding = DataBindingUtil.inflate(inflater, layout, parent, false)
+
+    override fun initializeViewModels() {
         val todoRepository = TodoRepository(context!!)
         addViewModel = AddTodoViewModel.newInstance(this, todoRepository)
         listingViewModel =
-            TodoListViewModel.getInstance(this, todoRepository, TodoListRepository(context!!))
+            TodosViewModel.getInstance(this, todoRepository, TodoListRepository(context!!))
+    }
+
+    override fun initializeView() {
+        val binding = getBindingInstance()
 
         binding.run {
             this.viewModel = listingViewModel
@@ -67,15 +66,19 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
         }
 
         binding.addTodoItemView.init(addViewModel, this)
-
-        val listId = arguments?.getInt(ARG_TODO_LIST_ID) ?: 0
-        addViewModel.start(listId)
-        listingViewModel.start(arguments?.getInt(ARG_TODO_LIST_ID) ?: 0)
-
-        initUI()
     }
 
-    private fun initUI() {
+    override fun loadData() {
+        val listId: Int = arguments?.getInt(ARG_TODO_LIST_ID)
+            ?: throw IllegalStateException("Started listing screen without a valid list id")
+
+        addViewModel.start(listId)
+        listingViewModel.start(arguments?.getInt(ARG_TODO_LIST_ID) ?: 0)
+    }
+
+    override fun observeData() {
+        val binding = getBindingInstance()
+
         listingViewModel.showDeleteSnackBar.observe(this, Observer { item ->
             Snackbar
                 .make(binding.root, getString(R.string.msg_item_deleted), Snackbar.LENGTH_LONG)
@@ -90,11 +93,15 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
             showAddTodoView()
         })
 
-        val toastObserver = Observer<Int> {
-            toast(getString(it))
+        val toastObserver = Observer<Event<Int>> {
+            if (it.hasBeenHandled) return@Observer
+
+            it.getContentIfNotHandled()?.let { id ->
+                toast(getString(id))
+            }
         }
-        addViewModel.toast.observe(this, toastObserver)
-        listingViewModel.toast.observe(this, toastObserver)
+        addViewModel.showToast.observe(this, toastObserver)
+        listingViewModel.showToast.observe(this, toastObserver)
 
         isKeyboardOpen.observe(this, Observer { keyboardOpen ->
             if (!keyboardOpen) {
@@ -108,10 +115,6 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
         })
     }
 
-    private fun showAddTodoView() {
-        activity?.forceShowKeyboard()
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         activity?.let {
@@ -122,6 +125,10 @@ class TodoListingFragmentNew : Fragment(), OnItemInteractionListener {
     override fun onPause() {
         super.onPause()
         activity?.hideKeyboard()
+    }
+
+    private fun showAddTodoView() {
+        activity?.forceShowKeyboard()
     }
 
     override fun onMove(recyclerView: RecyclerView, initialPosition: Int, finalPosition: Int) {

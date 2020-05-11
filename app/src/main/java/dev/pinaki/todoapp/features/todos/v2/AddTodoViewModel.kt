@@ -3,37 +3,42 @@ package dev.pinaki.todoapp.features.todos.v2
 import android.app.Application
 import androidx.lifecycle.*
 import dev.pinaki.todoapp.R
+import dev.pinaki.todoapp.common.ui.viewmodel.BaseViewModel
 import dev.pinaki.todoapp.common.util.launchInIOScope
+import dev.pinaki.todoapp.data.ds.Event
 import dev.pinaki.todoapp.data.source.TodoRepository
 import dev.pinaki.todoapp.data.source.local.db.entity.TodoItem
 
 class AddTodoViewModel(application: Application, val todoRepository: TodoRepository) :
-    AndroidViewModel(application) {
+    BaseViewModel(application) {
 
     val title = MutableLiveData<String>()
     val description = MutableLiveData<String>()
     val showDescription = MutableLiveData<Boolean>()
 
-    private val _showKeyboardOnTitleField = MediatorLiveData<Boolean>().also {
-        it.addSource(showDescription) { value ->
-            if (!value) {
-                it.value = true
+    private var listId: Int = 0
+
+    private val _showKeyboardOnTitleField: MutableLiveData<Boolean> =
+        MediatorLiveData<Boolean>().also {
+            it.addSource(showDescription) { value ->
+                if (!value) {
+                    it.value = true
+                }
             }
         }
-    }
     val showKeyboardOnTitleField: LiveData<Boolean> = _showKeyboardOnTitleField
 
-    private val _showKeyboardOnDescriptionField = MediatorLiveData<Boolean>().also {
-        it.addSource(showDescription) { value ->
-            it.value = value
+    private val _showKeyboardOnDescriptionField: MutableLiveData<Boolean> =
+        MediatorLiveData<Boolean>().also {
+            it.addSource(showDescription) { value ->
+                it.value = value
+            }
         }
-    }
     val showKeyboardOnDescriptionField: LiveData<Boolean> = _showKeyboardOnDescriptionField
 
-    private val _toast = MutableLiveData<Int>()
-    val toast: LiveData<Int> = _toast
-
-    private val _listId = MutableLiveData<Int>()
+    fun start(listId: Int) {
+        this.listId = listId
+    }
 
     fun onTitleSubmit() {
         if (showDescription.value == true) {
@@ -48,34 +53,42 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
     }
 
     fun onContinue() {
-        val listId = _listId.value ?: return
-
         val titleStr: String? = title.value
-        val descriptionStr: String? = if (showDescription.value == true) description.value else null
-
         if (titleStr.isNullOrEmpty()) {
-            _toast.value = R.string.err_item_name_empty
+            _showToast.value = Event(R.string.err_item_name_empty)
             return
         }
 
-        launchInIOScope {
-            todoRepository.addTodo(
-                TodoItem(
-                    title = titleStr,
-                    description = descriptionStr,
-                    listRefId = listId,
-                    done = false
-                ), true
-            )
+        val saveDescription = showDescription.value == true && !description.value.isNullOrEmpty()
+        val descriptionStr: String? = if (saveDescription) description.value else null
 
-            title.postValue("")
-            description.postValue("")
-            _showKeyboardOnTitleField.postValue(true)
+        launchInIOScope {
+            try {
+                saveTodoItem(titleStr, descriptionStr, listId)
+                clearInputFields()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _showToast.postValue(Event(R.string.msg_error_occurred))
+            }
         }
     }
 
-    fun start(listId: Int) {
-        _listId.value = listId
+    private suspend fun saveTodoItem(titleStr: String, descriptionStr: String?, listId: Int) {
+        todoRepository.addTodo(
+            TodoItem(
+                title = titleStr,
+                description = descriptionStr,
+                listRefId = listId,
+                done = false
+            ),
+            updateOrderId = true
+        )
+    }
+
+    private fun clearInputFields() {
+        title.postValue("")
+        description.postValue("")
+        _showKeyboardOnTitleField.postValue(true)
     }
 
     class Factory(
