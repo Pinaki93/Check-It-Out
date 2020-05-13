@@ -128,4 +128,12 @@ class TodoRepository(context: Context) {
         item.itemOrder = newItemIndex
         updateTodo(item)
     }
+
+    suspend fun deleteAll(listId: Int) {
+        todoDao.deleteAll(listId)
+    }
+
+    suspend fun deleteCompleted(listId: Int) {
+        todoDao.deleteCompleted(listId)
+    }
 }

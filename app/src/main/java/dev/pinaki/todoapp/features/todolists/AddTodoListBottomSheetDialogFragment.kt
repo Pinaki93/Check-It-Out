@@ -2,6 +2,7 @@ package dev.pinaki.todoapp.features.todolists
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,15 @@ class AddTodoListBottomSheetDialogFragment : CurvedBottomSheetDialogFragment(),
         binding.cbShowDescription.setOnClickListener(this)
 
         binding.etListName.setOnEditorActionListener(this)
+
+        binding.etListName.setOnKeyListener { v, keyCode, event ->
+            Log.d("KeyTest","event: $event, keycode: $keyCode")
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dismissAllowingStateLoss()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -100,7 +110,7 @@ class AddTodoListBottomSheetDialogFragment : CurvedBottomSheetDialogFragment(),
                 null
 
         listener?.onAddTodoList(listName, listDescription)
-        dismissAllowingStateLoss()
+//        dismissAllowingStateLoss()
 
     }
 

@@ -15,7 +15,7 @@
 
         <import type="androidx.appcompat.widget.AppCompatCheckBox" />
 
-        <import type="dev.pinaki.todoapp.common.util.CommonUtilsKt" />
+        <import type="dev.pinaki.todoapp.common.util.ExtsKt" />
     </data>
 
     <FrameLayout
@@ -112,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:alpha=".40"
-                            android:text="@{(item.done ? String.format(@string/lbl_item_completed_date, CommonUtilsKt.getAsDisplayString(item.dateCompeted)): null)}"
+                            android:text="@{(item.done ? String.format(@string/lbl_item_completed_date, ExtsKt.getAsDisplayString(item.dateCompeted)): null)}"
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             app:GoneUnless="@{item.done}"

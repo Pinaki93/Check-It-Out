@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/menu_item_share"
+            android:title="Share" />
+
+    <item
+            android:id="@+id/menu_item_sort"
+            android:title="Sort List" />
+
+
+    <item
+            android:id="@+id/menu_item_clear_completed"
+            android:title="Delete Completed items" />
+
+    <item
+            android:id="@+id/menu_item_clear_all"
+            android:title="Delete All items" />
+
+    <item
+            android:id="@+id/menu_item_delete"
+            android:title="Delete List" />
+</menu>

@@ -3,6 +3,8 @@ package dev.pinaki.todoapp.features.todos.v2
 import android.app.Application
 import androidx.lifecycle.*
 import dev.pinaki.todoapp.R
+import dev.pinaki.todoapp.common.model.AlertDialogItem
+import dev.pinaki.todoapp.common.model.ButtonItem
 import dev.pinaki.todoapp.common.ui.viewmodel.BaseViewModel
 import dev.pinaki.todoapp.common.util.isTodoSectionChanged
 import dev.pinaki.todoapp.common.util.launchInIOScope
@@ -51,6 +53,9 @@ class TodosViewModel(
 
     private val _showAddTodoView = MutableLiveData<Event<Boolean>>()
     val showAddTodoView: LiveData<Event<Boolean>> = _showAddTodoView
+
+    private val _showTodoListScreen = MutableLiveData<Event<Boolean>>()
+    val showTodoListScreen: LiveData<Event<Boolean>> = _showTodoListScreen
 
     private var startDragPosition: Int? = null
     private var listStateAtStartDrag: List<TodoItem>? = null
@@ -149,6 +154,97 @@ class TodosViewModel(
         }
     }
 
+    fun onClearAllOptionClick() {
+        _showAlertDialog.value = Event(getClearAllConfirmAlert())
+    }
+
+    private fun getClearAllConfirmAlert() =
+        AlertDialogItem(
+            title = R.string.clear_items_dialog_title,
+            message = R.string.delete_dialog_message,
+            positiveButtonItem = ButtonItem(R.string.yes) {
+                clearAllItems()
+                return@ButtonItem true
+            },
+
+            negativeButtonItem = ButtonItem(R.string.no)
+        )
+
+    private fun clearAllItems() {
+        _id.value?.let {
+            launchInIOScope {
+                try {
+                    todoRepository.deleteAll(it)
+                    _showToast.postValue(Event(R.string.all_items_deleted))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    showErrorToast()
+                }
+            }
+        }
+    }
+
+    fun onClearCompletedClick() {
+        _showAlertDialog.value = Event(getClearCompletedConfirmAlert())
+    }
+
+    private fun getClearCompletedConfirmAlert() =
+        AlertDialogItem(
+            title = R.string.clear_items_dialog_title,
+            message = R.string.delete_dialog_message,
+            positiveButtonItem = ButtonItem(R.string.yes) {
+                clearCompletedItems()
+                return@ButtonItem true
+            },
+
+            negativeButtonItem = ButtonItem(R.string.no)
+        )
+
+    private fun clearCompletedItems() {
+        _id.value?.let {
+            launchInIOScope {
+                try {
+                    todoRepository.deleteCompleted(it)
+                    _showToast.postValue(Event(R.string.completed_items_deleted))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    showErrorToast()
+                }
+            }
+        }
+    }
+
+    fun onDeleteListClick() {
+        _showAlertDialog.value = Event(getDeleteListConfirmAlert())
+    }
+
+    private fun getDeleteListConfirmAlert() =
+        AlertDialogItem(
+            title = R.string.clear_items_dialog_title,
+            message = R.string.delete_dialog_message,
+            positiveButtonItem = ButtonItem(R.string.yes) {
+                deleteList()
+                return@ButtonItem true
+            },
+
+            negativeButtonItem = ButtonItem(R.string.no)
+        )
+
+    private fun deleteList() {
+        todoList.value?.let {
+            launchInIOScope {
+                try {
+                    todoListRepository.deleteList(it)
+                    _showToast.postValue(Event(R.string.list_deleted))
+                    _showTodoListScreen.postValue(Event(true))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    showErrorToast()
+                }
+            }
+        }
+    }
+
     private fun showErrorToast() {
         _showToast.postValue(Event(R.string.msg_error_occurred))
     }
@@ -170,7 +266,7 @@ class TodosViewModel(
 
     companion object {
         fun getInstance(
-            fragment: TodoListingFragmentNew,
+            fragment: TodosFragment,
             todoRepository: TodoRepository,
             todoListRepository: TodoListRepository
         ): TodosViewModel {

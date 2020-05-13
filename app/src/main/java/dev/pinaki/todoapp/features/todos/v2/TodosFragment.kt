@@ -2,8 +2,7 @@ package dev.pinaki.todoapp.features.todos.v2
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -20,7 +19,7 @@ import dev.pinaki.todoapp.data.source.TodoListRepository
 import dev.pinaki.todoapp.data.source.TodoRepository
 import dev.pinaki.todoapp.databinding.TodoListBinding
 
-class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractionListener {
+class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener {
 
     private lateinit var isKeyboardOpen: IsKeyboardOpen
 
@@ -54,7 +53,7 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
         binding.run {
             this.viewModel = listingViewModel
             this.isKeyboardOpen = isKeyboardOpen
-            this.lifecycleOwner = this@TodoListingFragmentNew
+            this.lifecycleOwner = this@TodosFragment
 
             executePendingBindings()
         }
@@ -65,7 +64,7 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
             this.adapter = todosAdapter
 
             val touchHelperCallback =
-                ItemTouchHelper(TouchHelperCallback(this@TodoListingFragmentNew, this))
+                ItemTouchHelper(TouchHelperCallback(this@TodosFragment, this))
             touchHelperCallback.attachToRecyclerView(this)
         }
 
@@ -110,6 +109,15 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
         addViewModel.showToast.observe(this, toastObserver)
         listingViewModel.showToast.observe(this, toastObserver)
 
+        listingViewModel.showAlertDialog.observe(this, Observer {
+            val item = it.getContentIfNotHandled() ?: return@Observer
+            showAlertDialog(item = item)
+        })
+
+        listingViewModel.showTodoListScreen.observe(this, Observer {
+            activity?.onBackPressed()
+        })
+
         isKeyboardOpen.observe(this, Observer { keyboardOpen ->
             if (!keyboardOpen) {
                 binding.addTodoItemView.gone()
@@ -134,6 +142,37 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
     override fun onPause() {
         super.onPause()
         activity?.hideKeyboard()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_todos, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_share -> {
+                toast("TODO")
+            }
+
+            R.id.menu_item_sort -> {
+                toast("TODO")
+            }
+
+            R.id.menu_item_clear_completed -> {
+                listingViewModel.onClearCompletedClick()
+            }
+
+            R.id.menu_item_clear_all -> {
+                listingViewModel.onClearAllOptionClick()
+            }
+
+            R.id.menu_item_delete -> {
+                listingViewModel.onDeleteListClick()
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun showAddTodoView() {
@@ -165,8 +204,8 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
 
         private const val ARG_TODO_LIST_ID = "todo_list_id"
 
-        fun newInstance(id: Int): TodoListingFragmentNew {
-            return TodoListingFragmentNew().apply {
+        fun newInstance(id: Int): TodosFragment {
+            return TodosFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_TODO_LIST_ID, id)
                 }

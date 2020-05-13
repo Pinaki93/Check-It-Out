@@ -92,7 +92,7 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
     }
 
     class Factory(
-        private val fragment: TodoListingFragmentNew,
+        private val fragment: TodosFragment,
         private val repository: TodoRepository
     ) :
         ViewModelProvider.Factory {
@@ -106,7 +106,7 @@ class AddTodoViewModel(application: Application, val todoRepository: TodoReposit
 
     companion object {
         fun newInstance(
-            fragment: TodoListingFragmentNew,
+            fragment: TodosFragment,
             repository: TodoRepository
         ) = ViewModelProviders.of(
             fragment,

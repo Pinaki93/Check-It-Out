@@ -15,7 +15,7 @@
             android:paddingRight="24dp"
             android:paddingBottom="8dp">
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_list_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,9 +30,13 @@
                 android:textColor="#2E2E2E"
                 android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="My Tweets" />
+                tools:text="My Tweets">
 
-        <EditText
+            <requestFocus />
+
+        </androidx.appcompat.widget.AppCompatEditText>
+
+        <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_list_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

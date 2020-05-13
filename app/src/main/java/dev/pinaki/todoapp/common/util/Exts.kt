@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.pinaki.todoapp.common.model.AlertDialogItem
 import dev.pinaki.todoapp.data.source.local.db.entity.TodoItem
 import dev.pinaki.todoapp.features.todos.obsolete.adapter.ContentItem
 import dev.pinaki.todoapp.features.todos.obsolete.adapter.HeaderItem
@@ -210,4 +211,72 @@ fun Activity.hideKeyboard() {
         view = View(this)
     }
     imm.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun Fragment?.cantShowDialog() = this == null || this.activity?.isFinishing ?: false
+
+fun Fragment.showAlertDialog(item: AlertDialogItem) {
+    if (cantShowDialog()) return
+
+    activity?.let {
+        androidx.appcompat.app.AlertDialog.Builder(it).apply {
+            if (item.title != null)
+                setTitle(getString(item.title))
+
+            if (item.message != null)
+                setMessage(item.message)
+
+            setCancelable(item.cancelable)
+
+            if (item.positiveButtonItem != null) {
+                setPositiveButton(
+                    item.positiveButtonItem.text
+                ) { dialog, _ ->
+                    if (item.positiveButtonItem.listener == null) {
+                        dialog.dismiss()
+                        return@setPositiveButton
+                    }
+
+                    val dismiss = item.positiveButtonItem.listener.invoke()
+                    if (dismiss) {
+                        dialog.dismiss()
+                    }
+                }
+            }
+
+            if (item.neutralButtonItem != null) {
+                setNeutralButton(
+                    item.neutralButtonItem.text
+                ) { dialog, _ ->
+                    if (item.neutralButtonItem.listener == null) {
+                        dialog.dismiss()
+                        return@setNeutralButton
+                    }
+
+                    val dismiss = item.neutralButtonItem.listener.invoke()
+                    if (dismiss) {
+                        dialog.dismiss()
+                    }
+                }
+            }
+
+            if (item.negativeButtonItem != null) {
+                setNegativeButton(
+                    item.negativeButtonItem.text
+                ) { dialog, _ ->
+                    if (item.negativeButtonItem.listener == null) {
+                        dialog.dismiss()
+                        return@setNegativeButton
+                    }
+
+                    val dismiss = item.negativeButtonItem.listener.invoke()
+                    if (dismiss) {
+                        dialog.dismiss()
+                    }
+                }
+            }
+        }.show()
+    }
+
+
 }
