@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
@@ -21,11 +23,22 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
     protected abstract fun observeData()
 
+    protected abstract fun getToolbarInstance(): Toolbar?
+
     protected open fun loadData() {
 
     }
 
+    protected open fun fragmentHasOptionsMenu(): Boolean {
+        return false
+    }
+
     private lateinit var binding: B
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(fragmentHasOptionsMenu())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +51,10 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getToolbarInstance()?.let {
+            (requireActivity() as AppCompatActivity).setSupportActionBar(getToolbarInstance())
+        }
+
         initializeViewModels()
         initializeView()
         loadData()

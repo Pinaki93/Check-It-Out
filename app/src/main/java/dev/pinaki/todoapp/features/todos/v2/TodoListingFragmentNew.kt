@@ -37,6 +37,10 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
         parent: ViewGroup?
     ): TodoListBinding = DataBindingUtil.inflate(inflater, layout, parent, false)
 
+    override fun fragmentHasOptionsMenu() = true
+
+    override fun getToolbarInstance() = getBindingInstance().appBar
+
     override fun initializeViewModels() {
         val todoRepository = TodoRepository(context!!)
         addViewModel = AddTodoViewModel.newInstance(this, todoRepository)
@@ -66,6 +70,9 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
         }
 
         binding.addTodoItemView.init(addViewModel, this)
+        binding.appBar.setNavigationOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
     override fun loadData() {
@@ -107,10 +114,12 @@ class TodoListingFragmentNew : BaseFragment<TodoListBinding>(), OnItemInteractio
             if (!keyboardOpen) {
                 binding.addTodoItemView.gone()
                 binding.fabAddTodo.visible()
+                binding.appBar.performShow()
             } else {
                 binding.addTodoItemView.visible()
                 binding.fabAddTodo.gone()
                 binding.addTodoItemView.showKeyboard() // make sure the focus is on the edittext
+                binding.appBar.performHide()
             }
         })
     }

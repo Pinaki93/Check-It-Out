@@ -3,6 +3,7 @@ package dev.pinaki.todoapp.features.todolists
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,10 @@ class TodoListsFragment : BaseFragment<AllListBinding>(),
         parent: ViewGroup?
     ): AllListBinding {
         return DataBindingUtil.inflate(inflater, getLayout(), parent, false)
+    }
+
+    override fun getToolbarInstance(): Toolbar? {
+        return null
     }
 
     override fun initializeViewModels() {
