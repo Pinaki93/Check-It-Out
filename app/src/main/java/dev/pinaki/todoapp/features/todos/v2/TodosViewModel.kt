@@ -91,7 +91,6 @@ class TodosViewModel(
         listStateAtStartDrag?.run {
             startDragPosition?.let {
                 if (isTodoSectionChanged(this, it, position)) {
-                    // reload list by setting id again
                     reLoadTodos()
                     listStateAtStartDrag = null
                     startDragPosition = null

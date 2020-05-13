@@ -11,17 +11,19 @@ import androidx.fragment.app.Fragment
 abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
     @LayoutRes
-    abstract fun getLayout(): Int
+    protected abstract fun getLayout(): Int
 
-    abstract fun getBinding(inflater: LayoutInflater, layout: Int, parent: ViewGroup?): B
+    protected abstract fun getBinding(inflater: LayoutInflater, layout: Int, parent: ViewGroup?): B
 
-    abstract fun initializeViewModels()
+    protected abstract fun initializeViewModels()
 
-    abstract fun initializeView()
+    protected abstract fun initializeView()
 
-    abstract fun loadData()
+    protected abstract fun observeData()
 
-    abstract fun observeData()
+    protected open fun loadData() {
+
+    }
 
     private lateinit var binding: B
 

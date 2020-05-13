@@ -1,8 +1,10 @@
 package dev.pinaki.todoapp.features.todolists
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import dev.pinaki.todoapp.R
+import dev.pinaki.todoapp.common.ui.viewmodel.BaseViewModel
 import dev.pinaki.todoapp.common.util.launchInIOScope
 import dev.pinaki.todoapp.data.ds.Event
 import dev.pinaki.todoapp.data.source.TodoListRepository
@@ -12,13 +14,23 @@ internal class AllListsViewModel(
     application: Application,
     private val todoListRepository: TodoListRepository
 ) :
-    AndroidViewModel(application) {
+    BaseViewModel(application) {
 
-    val todoLists = todoListRepository.observeAllTodoLists().distinctUntilChanged()
-    val showEmptyView = todoLists.map { it.isNullOrEmpty() }
-
-    private val _toast = MutableLiveData<Int>()
-    val toast: LiveData<Int> = _toast
+    val todoLists = todoListRepository.observeAllTodoLists()
+        .map {
+            Log.d("AllListsViewModel", "before distinctUntil Changed?: $it")
+            it
+        }
+        .distinctUntilChanged().map {
+        Log.d("AllListsViewModel", "after distinctUntil Changed?: $it")
+        it
+    }
+    val showEmptyView = todoLists.map {
+        it.isNullOrEmpty()
+    }.map {
+        Log.d("AllListsViewModel", "showing empty view?: $it")
+        it
+    }
 
     private val _showTodoList = MutableLiveData<Event<Int>>()
     val showTodoList: LiveData<Event<Int>> = _showTodoList
@@ -27,7 +39,6 @@ internal class AllListsViewModel(
         item.id?.run {
             _showTodoList.value = Event(this)
         }
-
     }
 
     // TODO: move this to Add Todo Bottom Sheet's View  Model
@@ -37,9 +48,9 @@ internal class AllListsViewModel(
         launchInIOScope {
             try {
                 todoListRepository.addTodoList(todoList)
-                _toast.postValue(R.string.msg_list_added_successfully)
+                _showToast.postValue(Event(R.string.msg_list_added_successfully))
             } catch (e: Exception) {
-                _toast.postValue(R.string.msg_error_occurred)
+                _showToast.postValue(Event(R.string.msg_error_occurred))
             }
         }
     }
@@ -58,7 +69,7 @@ internal class AllListsViewModel(
 
     companion object {
         fun getInstance(
-            fragment: AllListsFragment, repository: TodoListRepository
+            fragment: TodoListsFragment, repository: TodoListRepository
         ): AllListsViewModel {
             return ViewModelProviders.of(
                 fragment,
