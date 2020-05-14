@@ -3,22 +3,17 @@
 
     <item
             android:id="@+id/menu_item_share"
-            android:title="Share" />
-
-    <item
-            android:id="@+id/menu_item_sort"
-            android:title="Sort List" />
-
+            android:title="@string/menu_title_share" />
 
     <item
             android:id="@+id/menu_item_clear_completed"
-            android:title="Delete Completed items" />
+            android:title="@string/menu_title_delete_completed_items" />
 
     <item
             android:id="@+id/menu_item_clear_all"
-            android:title="Delete All items" />
+            android:title="@string/menu_title_delete_all_items" />
 
     <item
             android:id="@+id/menu_item_delete"
-            android:title="Delete List" />
+            android:title="@string/menu_title_delete_list" />
 </menu>

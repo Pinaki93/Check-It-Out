@@ -100,11 +100,8 @@ class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener
         })
 
         val toastObserver = Observer<Event<Int>> {
-            if (it.hasBeenHandled) return@Observer
-
-            it.getContentIfNotHandled()?.let { id ->
-                toast(getString(id))
-            }
+            val toastResId = it.getContentIfNotHandled() ?: return@Observer
+            toast(getString(toastResId))
         }
         addViewModel.showToast.observe(this, toastObserver)
         listingViewModel.showToast.observe(this, toastObserver)
@@ -152,10 +149,6 @@ class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_share -> {
-                toast("TODO")
-            }
-
-            R.id.menu_item_sort -> {
                 toast("TODO")
             }
 

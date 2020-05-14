@@ -40,4 +40,8 @@
     <string name="completed_items_deleted">Completed items deleted successfully!</string>
     <string name="all_items_deleted">All items deleted successfully!</string>
     <string name="list_deleted">List deleted successfully!</string>
+    <string name="menu_title_share">Share</string>
+    <string name="menu_title_delete_completed_items">Delete Completed items</string>
+    <string name="menu_title_delete_all_items">Delete All items</string>
+    <string name="menu_title_delete_list">Delete List</string>
 </resources>
