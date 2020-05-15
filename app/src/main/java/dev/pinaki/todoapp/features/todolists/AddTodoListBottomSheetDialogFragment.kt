@@ -2,7 +2,6 @@ package dev.pinaki.todoapp.features.todolists
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +10,14 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import dev.pinaki.todoapp.R
-import dev.pinaki.todoapp.common.ui.bottomsheet.CurvedBottomSheetDialogFragment
+import dev.pinaki.todoapp.common.ui.bottomsheet.BaseBottomSheetDialogFragment
 import dev.pinaki.todoapp.common.util.gone
 import dev.pinaki.todoapp.common.util.showKeyboard
 import dev.pinaki.todoapp.common.util.toast
 import dev.pinaki.todoapp.common.util.visible
 import dev.pinaki.todoapp.databinding.AddTodoListBinding
 
-class AddTodoListBottomSheetDialogFragment : CurvedBottomSheetDialogFragment(),
+class AddTodoListBottomSheetDialogFragment : BaseBottomSheetDialogFragment(),
     View.OnClickListener, TextView.OnEditorActionListener {
 
     private lateinit var binding: AddTodoListBinding
@@ -40,15 +39,6 @@ class AddTodoListBottomSheetDialogFragment : CurvedBottomSheetDialogFragment(),
         binding.cbShowDescription.setOnClickListener(this)
 
         binding.etListName.setOnEditorActionListener(this)
-
-        binding.etListName.setOnKeyListener { v, keyCode, event ->
-            Log.d("KeyTest","event: $event, keycode: $keyCode")
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                dismissAllowingStateLoss()
-                return@setOnKeyListener true
-            }
-            return@setOnKeyListener false
-        }
     }
 
     override fun onAttach(context: Context) {
@@ -59,6 +49,8 @@ class AddTodoListBottomSheetDialogFragment : CurvedBottomSheetDialogFragment(),
             }
         }
     }
+
+    override fun makeTopCornersRounded() = true
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -110,25 +102,32 @@ class AddTodoListBottomSheetDialogFragment : CurvedBottomSheetDialogFragment(),
                 null
 
         listener?.onAddTodoList(listName, listDescription)
-//        dismissAllowingStateLoss()
+        dismissAllowingStateLoss()
+        listener?.onAddBottomSheetDismiss()
 
+    }
+
+    override fun onDialogCancel() {
+        listener?.onAddBottomSheetDismiss()
     }
 
     private fun isDescriptionShowing() = binding.cbShowDescription.isChecked
 
     interface Listener {
         fun onAddTodoList(listName: String, listDescription: String?)
+        fun onAddBottomSheetDismiss()
     }
 
     companion object {
 
         const val TAG = "AddTodoListBS"
 
-        fun show(fragment: Fragment) {
+        fun show(fragment: Fragment): AddTodoListBottomSheetDialogFragment {
             val instance = AddTodoListBottomSheetDialogFragment()
             instance.setTargetFragment(fragment, 1)
 
             instance.show(fragment.activity!!.supportFragmentManager, TAG)
+            return instance
         }
     }
 }

@@ -1,6 +1,7 @@
 package dev.pinaki.todoapp.features.todolists
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
@@ -12,6 +13,7 @@ import dev.pinaki.todoapp.common.ui.fragment.BaseFragment
 import dev.pinaki.todoapp.common.util.toast
 import dev.pinaki.todoapp.data.source.TodoListRepository
 import dev.pinaki.todoapp.databinding.AllListBinding
+import dev.pinaki.todoapp.features.landing.LandingFragment
 
 class TodoListsFragment : BaseFragment<AllListBinding>(),
     AddTodoListBottomSheetDialogFragment.Listener {
@@ -52,8 +54,17 @@ class TodoListsFragment : BaseFragment<AllListBinding>(),
             this.adapter = todoListAdapter
         }
 
-        binding.layoutAddTodoList.setOnClickListener {
-            AddTodoListBottomSheetDialogFragment.show(this)
+        binding.fabAddList.setOnClickListener {
+            binding.fabAddList.hide()
+
+            val bottomSheet = AddTodoListBottomSheetDialogFragment.show(this)
+            val dismissListener: (dialog: DialogInterface) -> Unit = {
+                binding.fabAddList.show()
+            }
+            bottomSheet.dialog?.apply {
+                setOnDismissListener(dismissListener)
+                setOnCancelListener(dismissListener)
+            }
         }
 
         binding.apply {
@@ -93,6 +104,10 @@ class TodoListsFragment : BaseFragment<AllListBinding>(),
         viewModel.addTodoList(listName, listDescription)
     }
 
+    override fun onAddBottomSheetDismiss() {
+        getBindingInstance().fabAddList.show()
+    }
+
     interface Listener {
         fun showTodoDetails(id: Int)
     }
@@ -100,6 +115,10 @@ class TodoListsFragment : BaseFragment<AllListBinding>(),
     companion object {
         const val TAG = "AllListFragment"
 
-        fun newInstance() = TodoListsFragment()
+        fun newInstance(targetFragment: LandingFragment): TodoListsFragment {
+            return TodoListsFragment().apply {
+                setTargetFragment(targetFragment, 1)
+            }
+        }
     }
 }

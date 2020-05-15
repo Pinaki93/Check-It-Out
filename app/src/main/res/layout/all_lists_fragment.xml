@@ -20,43 +20,42 @@
                 layout="@layout/layout_empty_list"
                 bind:viewModel="@{viewModel}" />
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_todo_lists"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:GoneUnless="@{!safeUnbox(viewModel.showEmptyView)}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:todoList="@{viewModel.todoLists}" />
-
         <LinearLayout
-                android:id="@+id/layout_add_todo_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:background="@drawable/bottom_option_bg_clickable"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:paddingLeft="16dp"
-                android:paddingTop="8dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp">
-
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="8dp"
-                    android:src="@drawable/ic_add_black_24dp"
-                    android:tint="@color/colorAccent" />
+                android:orientation="vertical">
 
             <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp"
+                    android:text="@string/all_lists"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:GoneUnless="@{!safeUnbox(viewModel.showEmptyView)}"
+                    app:fontFamily="sans-serif-medium" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_todo_lists"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/add_list"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:paddingBottom="72dp"
+                    android:clipToPadding="false"
+                    app:GoneUnless="@{!safeUnbox(viewModel.showEmptyView)}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:todoList="@{viewModel.todoLists}" />
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_add_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/ic_add_black_24dp"
+                app:backgroundTint="@color/colorAccent"
+                app:tint="@color/white" />
     </FrameLayout>
 </layout>

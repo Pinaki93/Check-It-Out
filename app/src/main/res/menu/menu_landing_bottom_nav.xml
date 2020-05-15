@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/menu_item_lists"
+            android:enabled="true"
+            android:icon="@drawable/ic_view_list_white_24dp"
+            android:title="@string/all_lists"/>
+
+    <item
+            android:id="@+id/menu_item_settings"
+            android:enabled="true"
+            android:icon="@drawable/ic_settings_white_24dp"
+            android:title="@string/settings" />
+</menu>

@@ -1,7 +1,6 @@
 package dev.pinaki.todoapp.features.todolists
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import dev.pinaki.todoapp.R
 import dev.pinaki.todoapp.common.ui.viewmodel.BaseViewModel
@@ -13,24 +12,11 @@ import dev.pinaki.todoapp.data.source.local.db.entity.TodoList
 internal class AllListsViewModel(
     application: Application,
     private val todoListRepository: TodoListRepository
-) :
-    BaseViewModel(application) {
+) : BaseViewModel(application) {
 
-    val todoLists = todoListRepository.observeAllTodoLists()
-        .map {
-            Log.d("AllListsViewModel", "before distinctUntil Changed?: $it")
-            it
-        }
-        .distinctUntilChanged().map {
-        Log.d("AllListsViewModel", "after distinctUntil Changed?: $it")
-        it
-    }
-    val showEmptyView = todoLists.map {
-        it.isNullOrEmpty()
-    }.map {
-        Log.d("AllListsViewModel", "showing empty view?: $it")
-        it
-    }
+    val todoLists = todoListRepository.observeAllTodoLists().distinctUntilChanged()
+
+    val showEmptyView = todoLists.map { it.isNullOrEmpty() }
 
     private val _showTodoList = MutableLiveData<Event<Int>>()
     val showTodoList: LiveData<Event<Int>> = _showTodoList

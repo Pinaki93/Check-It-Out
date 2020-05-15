@@ -12,4 +12,5 @@
     <color name="bottom_option_bg_normal">#f4f4f4</color>
     <color name="bottom_option_bg_clicked">#dcdcdc</color>
     <color name="crayola">#f3c98b</color>
+    <color name="light_pink">#f9aba9</color>
 </resources>

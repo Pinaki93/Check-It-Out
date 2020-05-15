@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import dev.pinaki.todoapp.R
-import dev.pinaki.todoapp.common.ui.bottomsheet.CurvedBottomSheetDialogFragment
+import dev.pinaki.todoapp.common.ui.bottomsheet.BaseBottomSheetDialogFragment
 import dev.pinaki.todoapp.common.util.getAsDisplayString
 import dev.pinaki.todoapp.common.util.gone
 import dev.pinaki.todoapp.databinding.TodoInfoBinding
 import java.util.*
 
-class TodoInfoBottomSheet : CurvedBottomSheetDialogFragment() {
+class TodoInfoBottomSheet : BaseBottomSheetDialogFragment() {
 
     private lateinit var dateCreated: Date
     private lateinit var dateModified: Date
