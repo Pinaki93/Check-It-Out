@@ -57,6 +57,9 @@ class TodosViewModel(
     private val _showTodoListScreen = MutableLiveData<Event<Boolean>>()
     val showTodoListScreen: LiveData<Event<Boolean>> = _showTodoListScreen
 
+    private val _showEditScreen = MutableLiveData<Event<TodoItem>>()
+    val showEditScreen: LiveData<Event<TodoItem>> = _showEditScreen
+
     private var startDragPosition: Int? = null
     private var listStateAtStartDrag: List<TodoItem>? = null
 
@@ -83,6 +86,10 @@ class TodosViewModel(
                 showErrorToast()
             }
         }
+    }
+
+    fun onItemClick(item: TodoItem) {
+        _showEditScreen.value = Event(item)
     }
 
     fun onStartDrag(position: Int) {

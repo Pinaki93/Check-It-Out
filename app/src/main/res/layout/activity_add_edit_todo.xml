@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools">
 
-    <data class="AddEditTodoBinding" />
+    <data class="AddEditTodoBinding">
+
+        <variable
+                name="viewModel"
+                type="dev.pinaki.todoapp.features.edittodo.AddEditTodoViewModel" />
+    </data>
+
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:focusableInTouchMode="true"
-            android:descendantFocusability="beforeDescendants"
             android:layout_height="match_parent"
-            android:background="@color/bg_main">
+            android:background="@color/bg_main"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -41,10 +47,11 @@
                         android:inputType="textCapSentences|textMultiLine"
                         android:maxLines="5"
                         android:scrollbars="vertical"
-                        tools:text="Collect Laundry"
+                        android:text="@={viewModel.title}"
                         android:textColor="#2E2E2E"
                         android:textSize="22sp"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Collect Laundry" />
 
             </LinearLayout>
 
@@ -72,9 +79,10 @@
                         android:paddingTop="8dp"
                         android:paddingRight="24dp"
                         android:paddingBottom="64dp"
-                        tools:text="@string/ipsum_long"
+                        android:text="@={viewModel.description}"
                         android:textColor="#8b8b8b"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:text="@string/ipsum_long" />
             </androidx.core.widget.NestedScrollView>
         </LinearLayout>
 

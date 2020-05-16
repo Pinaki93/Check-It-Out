@@ -75,7 +75,7 @@ class TodoListsFragment : BaseFragment<AllListBinding>(),
         }
     }
 
-    override fun observeData() {
+    override fun observeDataAndActions() {
         viewModel.showToast.observe(this, Observer {
             if (it.hasBeenHandled) return@Observer
 

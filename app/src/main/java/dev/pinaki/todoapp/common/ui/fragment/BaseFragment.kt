@@ -21,7 +21,7 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
     protected abstract fun initializeView()
 
-    protected abstract fun observeData()
+    protected abstract fun observeDataAndActions()
 
     protected abstract fun getToolbarInstance(): Toolbar?
 
@@ -58,7 +58,7 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
         initializeViewModels()
         initializeView()
         loadData()
-        observeData()
+        observeDataAndActions()
     }
 
     fun getBindingInstance(): B {

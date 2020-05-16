@@ -20,13 +20,6 @@ class TodoRepository(context: Context) {
     }
 
     suspend fun addTodo(item: TodoItem, updateOrderId: Boolean) {
-//        val insertId = todoDao.add(item).toInt()
-//
-//        if (updateOrderId) {
-//            val insertedItem = todoDao.getItem(insertId)
-//            insertedItem.itemOrder = (insertId + 1).toDouble()
-//            todoDao.update(insertedItem)
-//        }
         todoDao.addItemAndUpdateOrder(item, updateOrderId)
     }
 
@@ -40,6 +33,8 @@ class TodoRepository(context: Context) {
     }
 
     fun observerTodosForList(listId: Int) = todoDao.getItemsByListId(listId)
+
+    suspend fun getTodo(id: Int) = todoDao.getTodo(id)
 
     suspend fun moveItem(
         itemToMove: TodoItem,

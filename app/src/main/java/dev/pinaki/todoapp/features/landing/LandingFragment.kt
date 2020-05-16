@@ -51,7 +51,7 @@ class LandingFragment : BaseFragment<LandingFragmentBinding>() {
             .commitAllowingStateLoss()
     }
 
-    override fun observeData() {
+    override fun observeDataAndActions() {
 
     }
 

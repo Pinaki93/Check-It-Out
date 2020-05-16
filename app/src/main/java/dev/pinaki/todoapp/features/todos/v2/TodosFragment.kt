@@ -21,12 +21,13 @@ import dev.pinaki.todoapp.databinding.TodoListBinding
 
 class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener {
 
-    private lateinit var isKeyboardOpen: IsKeyboardOpen
-
     private lateinit var addViewModel: AddTodoViewModel
     private lateinit var listingViewModel: TodosViewModel
 
     private lateinit var todosAdapter: TodosAdapter
+    private lateinit var isKeyboardOpen: IsKeyboardOpen
+
+    private var listener: Listener? = null
 
     override fun getLayout() = R.layout.layout_todo_listing_new
 
@@ -82,7 +83,7 @@ class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener
         listingViewModel.start(arguments?.getInt(ARG_TODO_LIST_ID) ?: 0)
     }
 
-    override fun observeData() {
+    override fun observeDataAndActions() {
         val binding = getBindingInstance()
 
         listingViewModel.showDeleteSnackBar.observe(this, Observer { item ->
@@ -97,6 +98,11 @@ class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener
             if (it.hasBeenHandled) return@Observer
 
             showAddTodoView()
+        })
+
+        listingViewModel.showEditScreen.observe(this, Observer {
+            val todoItemId = it.getContentIfNotHandled()?.id ?: return@Observer
+            listener?.showEditScreen(todoItemId)
         })
 
         val toastObserver = Observer<Event<Int>> {
@@ -131,9 +137,13 @@ class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        activity?.let {
-            isKeyboardOpen = IsKeyboardOpen(it)
+        val activity = activity ?: return
+
+        if (activity is Listener) {
+            listener = activity
         }
+
+        isKeyboardOpen = IsKeyboardOpen(activity)
     }
 
     override fun onPause() {
@@ -190,6 +200,10 @@ class TodosFragment : BaseFragment<TodoListBinding>(), OnItemInteractionListener
 
     override fun onSwipeRight(recyclerView: RecyclerView, position: Int) {
         //TODO: later on, we can add labels or mark as important using this
+    }
+
+    interface Listener {
+        fun showEditScreen(id: Int)
     }
 
     companion object {

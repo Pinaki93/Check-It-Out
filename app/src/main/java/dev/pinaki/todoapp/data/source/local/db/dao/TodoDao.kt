@@ -48,4 +48,7 @@ interface TodoDao {
     @Transaction
     @Query("delete from todo_item where list_ref_id=:listId and is_done = 1")
     fun deleteCompleted(listId: Int)
+
+    @Query("select * from todo_item where id=:id")
+    suspend fun getTodo(id: Int): TodoItem
 }

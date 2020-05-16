@@ -42,7 +42,7 @@ class TodosAdapter(private val viewModel: TodosViewModel) :
         }
 
         override fun highlightItem(shouldHighlight: Boolean) {
-            //TODO
+
         }
 
         override fun getContentView() = binding.todoItemContainerParent
