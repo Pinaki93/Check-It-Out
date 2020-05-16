@@ -31,8 +31,8 @@ class AddEditTodoViewModel(private val todoRepository: TodoRepository, applicati
             launchInIOScope {
                 todo = todoRepository.getTodo(it)
                 todo?.let {
-                    title.value = it.title
-                    description.value = it.description
+                    title.postValue(it.title)
+                    description.postValue(it.description)
                 }
             }
         }

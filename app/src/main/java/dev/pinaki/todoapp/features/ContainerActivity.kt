@@ -21,15 +21,19 @@ class ContainerActivity : AppCompatActivity(), TodoListsFragment.Listener, Todos
 
     override fun showTodoDetails(id: Int) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, TodosFragment.newInstance(id))
+            .add(R.id.container, TodosFragment.newInstance(id))
             .addToBackStack(null)
             .commit()
     }
 
     override fun showEditScreen(id: Int) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, AddEditTodoFragment.newInstance(id))
+            .add(R.id.container, AddEditTodoFragment.newInstance(id))
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }
